@@ -296,6 +296,7 @@
     <!-- fetching user fc details -->
     <script src="fetchFCUser.js"></script>
     <script src="checkNFT.js"></script>
+    <script src="fetchLeaderboard.js"></script>
     <!-- main dom load script adding onclick events -->
     <script src="main.js"></script>
     <script src="./dist/bundle.js"></script>
@@ -973,85 +974,85 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
       }
       //supabase related queries
-      async function fetchLeaderboardData() {
-        try {
-          let { data, error } = await supabase
-            .from("points")
-            .select("*")
-            .eq("game_id", gameId)
-            .order("points", { ascending: false });
+      // async function fetchLeaderBoard() {
+      //   try {
+      //     let { data, error } = await supabase
+      //       .from("points")
+      //       .select("*")
+      //       .eq("game_id", gameId)
+      //       .order("points", { ascending: false });
 
-          console.log("data", data);
+      //     console.log("data", data);
 
-          let teamTokenIds = await supabase
-            .from("teamparticipants")
-            .select("*");
-          console.log("data id", teamTokenIds);
+      //     let teamTokenIds = await supabase
+      //       .from("teamparticipants")
+      //       .select("*");
+      //     console.log("data id", teamTokenIds);
 
-          let groupedByTeamId = teamTokenIds?.data.reduce(
-            (acc, participant) => {
-              const { team_id } = participant;
-              if (!acc[team_id]) {
-                acc[team_id] = [];
-              }
-              acc[team_id].push(participant);
-              return acc;
-            },
-            {}
-          );
+      //     let groupedByTeamId = teamTokenIds?.data.reduce(
+      //       (acc, participant) => {
+      //         const { team_id } = participant;
+      //         if (!acc[team_id]) {
+      //           acc[team_id] = [];
+      //         }
+      //         acc[team_id].push(participant);
+      //         return acc;
+      //       },
+      //       {}
+      //     );
 
-          let teamAverageScores = Object.entries(groupedByTeamId).map(
-            ([teamId, participants]) => {
-              let totalPoints = participants.reduce((acc, participant) => {
-                const points = data.find(
-                  (d) => d.tokenid === participant.tokenid
-                )?.points;
+      //     let teamAverageScores = Object.entries(groupedByTeamId).map(
+      //       ([teamId, participants]) => {
+      //         let totalPoints = participants.reduce((acc, participant) => {
+      //           const points = data.find(
+      //             (d) => d.tokenid === participant.tokenid
+      //           )?.points;
 
-                const number = parseInt(points ?? "0");
+      //           const number = parseInt(points ?? "0");
 
-                acc = acc + number;
-                console.log("acc: ", acc);
-                return acc;
-              }, 0);
-              let averageScore = totalPoints / participants.length;
-              return { teamId, averageScore };
-            }
-          );
+      //           acc = acc + number;
+      //           console.log("acc: ", acc);
+      //           return acc;
+      //         }, 0);
+      //         let averageScore = totalPoints / participants.length;
+      //         return { teamId, averageScore };
+      //       }
+      //     );
 
-          if (activeTab === "#global-tab") {
-            data = teamAverageScores
-              ?.sort((a, b) => b.averageScore - a.averageScore)
-              ?.map((v) => {
-                return {
-                  tokenid: `Team ${capitalizeFirstLetter(
-                    teamParticipants[v.teamId]
-                  )}`,
-                  points: v.averageScore,
-                };
-              });
-          }
+      //     if (activeTab === "#global-tab") {
+      //       data = teamAverageScores
+      //         ?.sort((a, b) => b.averageScore - a.averageScore)
+      //         ?.map((v) => {
+      //           return {
+      //             tokenid: `Team ${capitalizeFirstLetter(
+      //               teamParticipants[v.teamId]
+      //             )}`,
+      //             points: v.averageScore,
+      //           };
+      //         });
+      //     }
 
-          if (activeTab === "#team-tab") {
-            teamData?.sort((a, b) => b.points - a.points);
+      //     if (activeTab === "#team-tab") {
+      //       teamData?.sort((a, b) => b.points - a.points);
 
-            data = teamData;
-          }
+      //       data = teamData;
+      //     }
 
-          if (error) throw error;
-          updateLeaderboard(data);
-          noOfParticipants = data?.length ?? 1;
+      //     if (error) throw error;
+      //     updateLeaderboard(data);
+      //     noOfParticipants = data?.length ?? 1;
 
-          document.getElementById(
-            "part-count"
-          ).innerHTML = `${noOfParticipants}/200`;
+      //     document.getElementById(
+      //       "part-count"
+      //     ).innerHTML = `${noOfParticipants}/200`;
 
-          if (tokenId) {
-            findCurrentTeamAndAvgScore(tokenId);
-          }
-        } catch (error) {
-          console.error("Error fetching leaderboard data:", error);
-        }
-      }
+      //     if (tokenId) {
+      //       findCurrentTeamAndAvgScore(tokenId);
+      //     }
+      //   } catch (error) {
+      //     console.error("Error fetching leaderboard data:", error);
+      //   }
+      // }
 
       function updateLeaderboard(data) {
         if (activeTab === "#team-tab") {
@@ -1083,20 +1084,9 @@
             `;
       }
 
-      function subscribeToLeaderboardUpdates() {
-        supabase
-          .from("points")
-          .on("INSERT", (payload) => {
-            fetchLeaderboardData();
-          })
-          .on("UPDATE", (payload) => {
-            fetchLeaderboardData();
-          })
-          .subscribe();
-      }
-
       document.addEventListener("DOMContentLoaded", async function () {
-        fetchLeaderboardData();
+        const leaderboard = await fetchLeaderBoard();
+        console.log("leaderboard data: ", leaderboard);
         const fc_user = await fetchFCUser([selectedAccount]);
         if (fc_user[selectedAccount][0]) {
           fcUserDetails = fc_user[selectedAccount][0];
@@ -1321,7 +1311,7 @@
             // Get the target tab content and add 'show active' class
             const targetId = tab.getAttribute("href");
             activeTab = `${targetId}-tab`;
-            fetchLeaderboardData();
+            fetchLeaderBoard();
           });
         });
       });
@@ -1397,7 +1387,7 @@
           score = s;
           updatePoints(s - prevScore);
           prevScore = s;
-          fetchLeaderboardData();
+          fetchLeaderBoard();
         },
         setGameSuccess: function (s) {
           successCount = s;
@@ -1854,7 +1844,8 @@
           }
 
           if (isNFTPresent) {
-            fetchLeaderboardData();
+            const leaderboard = await fetchLeaderBoard();
+            console.log("leaderboard data: ", leaderboard);
           }
         } catch (e) {
           console.log("Could not get a wallet connection", e);
