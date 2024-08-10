@@ -46,6 +46,7 @@
               <div class="data-score">23564</div>
             </div>
           </article>
+
           <article class="global-leaderboard-container">
             <div class="global-leaderboard-title">Global Leaderboard</div>
             <div class="global-leaderboard-separator"></div>
@@ -262,28 +263,32 @@
         </div>
       </div>
 
-      <button id="walletButton">Connect Wallet</button>
+      <button id="walletButton">
+        <span class="pfp-container">
+          <img src="" class="" alt="" id="pfpImage" />
+          <span id="walletAddress"></span>
+        </span>
 
-      <div id="walletSelectionModal">
-        <div class="font-Kangmas font-30">Connect a Wallet</div>
-        <div class="wallet-container">
-          <div id="injectedWallets"></div>
-          <div
-            class="walletOption"
-            style="display: flex; align-items: center"
-            onclick="connectWithWalletConnect()"
-          >
-            <img
-              style="width: 24px; height: 24px; margin-right: 6px"
-              src="./assets/wallets/walletConnect.png"
-              alt="WalletConnect"
-            />
-            WalletConnect
+        <img src="assets/log-out.svg" alt="" class="log-out" />
+      </button>
+      <div id="walletConnectContainerModal" class="wallet-connect-container">
+        <div id="walletSelectionModal">
+          <div class="font-Kangmas font-30 text-white">Connect a Wallet</div>
+          <div class="wallet-container">
+            <div id="injectedWallets"></div>
+            <div class="walletOption" onclick="connectWithWalletConnect()">
+              <img
+                style="width: 24px; height: 24px; margin-right: 6px"
+                src="./assets/wallets/walletConnect.png"
+                alt="WalletConnect"
+              />
+              WalletConnect
+            </div>
           </div>
+          <button class="closeButton" onclick="closeWalletSelectionModal()">
+            Close
+          </button>
         </div>
-        <button class="closeButton" onclick="closeWalletSelectionModal()">
-          Close
-        </button>
       </div>
     </div>
     <!-- contract abi -->
@@ -974,11 +979,12 @@
             .eq("game_id", gameId)
             .order("points", { ascending: false });
 
-            console.log("data", data);
-            
+          console.log("data", data);
+
           let teamTokenIds = await supabase
             .from("teamparticipants")
             .select("*");
+          console.log("data id", teamTokenIds);
 
           let groupedByTeamId = teamTokenIds?.data.reduce(
             (acc, participant) => {
@@ -1087,8 +1093,22 @@
           .subscribe();
       }
 
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", async function () {
         fetchLeaderboardData();
+        const fc_user = await fetchFCUser([selectedAccount]);
+        if (fc_user[selectedAccount][0]) {
+          fcUserDetails = fc_user[selectedAccount][0];
+          const pfpImage = document.getElementById("pfpImage");
+          const logOut = document.getElementsByClassName("log-out")[0];
+          pfpImage.style.display = "block";
+          pfpImage.style.width = "24px";
+          pfpImage.style.height = "24px";
+          pfpImage.src = fcUserDetails.pfp_url;
+          if (logOut) {
+            logOut.style.display = "block";
+            logOut.addEventListener("click", disconnectWallet);
+          }
+        }
       });
 
       const updatePoints = async (newPoints) => {
@@ -1361,7 +1381,7 @@
       async function overShowOver() {
         window.location.href = window.location.href.includes("?s=")
           ? window.location.href.split("?")[0]
-          : window.location.href + "?s=" + +new Date();
+          : window.location.href + "?s=" + score;
       }
 
       let prevScore = 0;
@@ -1544,7 +1564,6 @@
         const savedAccount = localStorage.getItem("selectedAccount");
         const savedProviderType = localStorage.getItem("providerType");
         const savedName = localStorage.getItem("injectedName");
-        console.log(savedAccount);
 
         if (savedAccount && savedProviderType && savedName) {
           provider = await reconnectToProvider(savedProviderType, savedName);
@@ -1570,9 +1589,8 @@
 
         function createWalletOption(key, logoUrl, provider, name) {
           const walletOption = document.createElement("div");
-          walletOption.className = "walletOption";
-          walletOption.innerHTML = `<div style=" display: flex;
-        align-items: center;"><img style="width:24px; height: 24px; margin-right: 6px;" src="${logoUrl}" alt="${name}"/> ${name}</div>`;
+          // walletOption.className = "walletOption";
+          walletOption.innerHTML = `<div class="walletOption"><img style="width:24px; height: 24px; margin-right: 6px;" src="${logoUrl}" alt="${name}"/> ${name}</div>`;
           walletOption.onclick = () => {
             selectInjectedWallet(key, provider);
           };
@@ -1629,35 +1647,56 @@
         if (nftModal) {
           nftModal.style.display = "none";
         }
-        if (provider && !selectedAccount) {
+
+        if (!provider || !selectedAccount) {
           toggleWalletSelectionModal(true);
         } else {
-          toggleWalletSelectionModal(true);
-          // const walletBtn = document.getElementById("walletButton");
-          // walletBtn.innerText =
-          //   selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
-          // const textContainer =
-          //   document.getElementsByClassName("side-panel-header");
-          // const playButtonElement = document.getElementById("start-game");
+          toggleWalletSelectionModal(false);
+          console.log("selectedAccount inside", selectedAccount);
 
-          // if (textContainer && playButtonElement) {
-          //   textContainer[0].innerHTML = `
-          //   Your score is
-          //   <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
-          //   Higher↑          `;
+          const walletBtn = document.getElementById("walletAddress");
+          walletBtn.innerText =
+            selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
+          const textContainer =
+            document.getElementsByClassName("side-panel-header");
+          const playButtonElement = document.getElementById("start-game");
 
-          //   playButtonElement.textContent = "Play game";
-          // }
-          // const fc_user = await fetchFCUser([selectedAccount]);
-          // console.log(fc_user);
+          if (textContainer && playButtonElement) {
+            textContainer[0].innerHTML = `
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
 
-          // const pfpImage = document.getElementById("pfpImg");
+            playButtonElement.textContent = "Play game";
+          }
         }
       }
 
       function toggleWalletSelectionModal(show) {
         const modal = document.getElementById("walletSelectionModal");
-        modal.style.display = show ? "flex" : "none";
+        const modalContainer = document.getElementById(
+          "walletConnectContainerModal"
+        );
+        if (show) {
+          modalContainer.style.display = "flex";
+          setTimeout(() => {
+            modal.style.top = "50%";
+          }, 200);
+          modalContainer.onclick = () => {
+            modal.style.top = "250%";
+            setTimeout(() => {
+              modalContainer.style.display = "none";
+            }, 200);
+          };
+          modal.onclick = (e) => {
+            e.preventDefault();
+          };
+        } else {
+          modal.style.top = "250%";
+          setTimeout(() => {
+            modalContainer.style.display = "none";
+          }, 200);
+        }
       }
 
       function closeWalletSelectionModal() {
@@ -1678,6 +1717,23 @@
             await selectedProvider.request({ method: "eth_requestAccounts" });
           }
           await connectWallet(key, selectedProvider, "injected");
+          if (selectedAccount) {
+            const fc_user = await fetchFCUser([selectedAccount]);
+            if (fc_user[selectedAccount][0]) {
+              fcUserDetails = fc_user[selectedAccount][0];
+              console.log("fc obj", fcUserDetails);
+              const pfpImage = document.getElementById("pfpImage");
+              const logOut = document.getElementsByClassName("log-out")[0];
+              pfpImage.style.display = "block";
+              pfpImage.style.width = "24px";
+              pfpImage.style.height = "24px";
+              pfpImage.src = fcUserDetails.pfp_url;
+              if (logOut) {
+                logOut.style.display = "block";
+                logOut.addEventListener("click", disconnectWallet);
+              }
+            }
+          }
         } catch (e) {
           console.log("Could not connect to the selected wallet", e);
         }
@@ -1709,15 +1765,30 @@
 
           walletConnected = true;
 
+          const fc_user = await fetchFCUser([accounts[0]]);
+          if (fc_user[selectedAccount][0]) {
+            fcUserDetails = fc_user[selectedAccount][0];
+            console.log("fc obj", fcUserDetails);
+            const pfpImage = document.getElementById("pfpImage");
+            const logOut = document.getElementsByClassName("log-out")[0];
+            pfpImage.style.display = "block";
+            pfpImage.style.width = "24px";
+            pfpImage.style.height = "24px";
+            pfpImage.src = fcUserDetails.pfp_url;
+            if (logOut) {
+              logOut.style.display = "block";
+              logOut.addEventListener("click", disconnectWallet);
+            }
+          }
           const textContainer =
             document.getElementsByClassName("side-panel-header");
           const playButtonElement = document.getElementById("start-game");
 
           if (textContainer && playButtonElement) {
             textContainer[0].innerHTML = `
-            Your score is
-            <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
-            Higher↑          `;
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
 
             playButtonElement.textContent = "Play game";
           }
@@ -1733,24 +1804,28 @@
 
           selectedProvider.on("disconnect", (error) => {
             console.log("Disconnected:", error);
+
+            // disconnecting wallet
             const textContainer =
               document.getElementsByClassName("side-panel-header");
             const playButtonElement = document.getElementById("start-game");
-
+            const walletBtnText = document.getElementById("walletAddress");
+            walletBtnText.innerText = "Connect Wallet";
+            const pfp = document.getElementById("pfpImage");
+            pfp.style.display = "none";
+            const logout = document.getElementsByClassName("log-out");
+            logout.style.display = "none";
             if (!walletConnected && textContainer && playButtonElement) {
               textContainer[0].innerHTML = `
-          Get as <br />
-          Higher↑ <br />
-          as you can!
-          `;
+            Get as <br />
+            Higher↑ <br />
+            as you can!
+            `;
 
               playButtonElement.textContent = "Connect Wallet to play";
             }
             resetButton();
           });
-
-          console.log(selectedAccount);
-
           isNFTPresent = await checkNFT(selectedAccount);
 
           if (isNFTPresent) {
@@ -1764,7 +1839,7 @@
       function updateButton() {
         if (selectedAccount) {
           document.getElementById(
-            "walletButton"
+            "walletAddress"
           ).innerText = `${selectedAccount.substring(
             0,
             6
@@ -1776,7 +1851,7 @@
       }
 
       function resetButton() {
-        document.getElementById("walletButton").innerText = "Connect Wallet";
+        document.getElementById("walletAddress").innerText = "Connect Wallet";
         provider = null;
         selectedAccount = null;
         localStorage.removeItem("selectedAccount");
@@ -1785,11 +1860,6 @@
       }
 
       async function checkNFT(address) {
-        console.log("address nft inside", address);
-        console.log("contr add", contractAddress);
-        console.log("contr abi", contractABI);
-        console.log("contr signer", signer);
-
         const contract = new ethers.Contract(
           contractAddress,
           contractABI,
@@ -1816,6 +1886,43 @@
           console.error("Error checking NFT presence:", error);
           return false;
         }
+      }
+
+      async function disconnectWallet() {
+        if (provider && provider.disconnect) {
+          try {
+            await provider.disconnect();
+          } catch (error) {
+            console.log("Error disconnecting wallet:", error);
+          }
+        }
+
+        resetButton();
+
+        const pfpImage = document.getElementById("pfpImage");
+        const logOut = document.getElementsByClassName("log-out")[0];
+        if (pfpImage) pfpImage.style.display = "none";
+        if (logOut) logOut.style.display = "none";
+
+        fcUserDetails = null;
+        walletConnected = false;
+        selectedAccount = null;
+        provider = null;
+
+        const textContainer =
+          document.getElementsByClassName("side-panel-header")[0];
+        const playButtonElement = document.getElementById("start-game");
+
+        if (textContainer && playButtonElement) {
+          textContainer.innerHTML = `
+        Get as <br />
+        Higher↑ <br />
+        as you can!
+      `;
+          playButtonElement.textContent = "Connect Wallet to play";
+        }
+
+        console.log("Wallet disconnected successfully");
       }
 
       window.addEventListener("load", async () => {

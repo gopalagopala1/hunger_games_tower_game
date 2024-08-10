@@ -575,6 +575,7 @@ function formatNumber(num) {
   var selectedAccount = localStorage.getItem("selectedAccount");
   var walletConnected = false,
     isNFTPresent = false;
+  var fcUserDetails;
   
   function formatNumber(num) {
     if (num >= 1e9) {
