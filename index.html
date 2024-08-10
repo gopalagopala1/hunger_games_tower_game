@@ -295,6 +295,7 @@
     <script src="contractABI.js"></script>
     <!-- fetching user fc details -->
     <script src="fetchFCUser.js"></script>
+    <script src="checkNFT.js"></script>
     <!-- main dom load script adding onclick events -->
     <script src="main.js"></script>
     <script src="./dist/bundle.js"></script>
@@ -916,6 +917,7 @@
       var selectedAccount = localStorage.getItem("selectedAccount");
       var walletConnected = false,
         isNFTPresent = false;
+      var isPlayerDead = false;
 
       function formatNumber(num) {
         if (num >= 1e9) {
@@ -1574,7 +1576,19 @@
 
           if (selectedAccount) {
             updateButton();
-            isNFTPresent = await checkNFT(selectedAccount);
+            const response = await checkNFT(selectedAccount);
+            if (response.tokenId) {
+              isNFTPresent = true;
+              tokenId = response.tokenId;
+            } else {
+              if (response.message.includes("dead")) {
+                isNFTPresent = true;
+                isPlayerDead = true;
+              } else {
+                isNFTPresent = false;
+              }
+            }
+
             walletConnected = true;
           }
 
@@ -1826,7 +1840,18 @@
             }
             resetButton();
           });
-          isNFTPresent = await checkNFT(selectedAccount);
+          const response = await checkNFT(selectedAccount);
+          if (response.tokenId) {
+            isNFTPresent = true;
+            tokenId = response.tokenId;
+          } else {
+            if (response.message.includes("dead")) {
+              isNFTPresent = true;
+              isPlayerDead = true;
+            } else {
+              isNFTPresent = false;
+            }
+          }
 
           if (isNFTPresent) {
             fetchLeaderboardData();
@@ -1859,34 +1884,34 @@
         localStorage.removeItem("injectedName");
       }
 
-      async function checkNFT(address) {
-        const contract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          signer
-        );
+      // async function checkNFT(address) {
+      //   const contract = new ethers.Contract(
+      //     contractAddress,
+      //     contractABI,
+      //     signer
+      //   );
 
-        try {
-          const balance = await contract.balanceOf(address);
-          console.log("balance", balance);
+      //   try {
+      //     const balance = await contract.balanceOf(address);
+      //     console.log("balance", balance);
 
-          const nftStatus = `Balance of NFTs for address ${address}: ${balance.toString()}`;
-          console.log("balance status", nftStatus);
+      //     const nftStatus = `Balance of NFTs for address ${address}: ${balance.toString()}`;
+      //     console.log("balance status", nftStatus);
 
-          if (balance.gt(0)) {
-            tokenId = (
-              await contract.tokenOfOwnerByIndex(address, 0)
-            ).toString();
+      //     if (balance.gt(0)) {
+      //       tokenId = (
+      //         await contract.tokenOfOwnerByIndex(address, 0)
+      //       ).toString();
 
-            return true;
-          } else {
-            return false;
-          }
-        } catch (error) {
-          console.error("Error checking NFT presence:", error);
-          return false;
-        }
-      }
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   } catch (error) {
+      //     console.error("Error checking NFT presence:", error);
+      //     return false;
+      //   }
+      // }
 
       async function disconnectWallet() {
         if (provider && provider.disconnect) {
