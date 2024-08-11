@@ -1,19 +1,20 @@
-const fetchFCUser = async (address) => {
+const checkNFT = async (address) => {
   try {
-    const addressParam =
-      Array.isArray(address) && address.length > 1
-        ? address.join("%2")
-        : address;
+    const addresses =
+      Array.isArray(address) && address.length > 1 ? address : [address];
 
-    const url = `https://tower-game-backend.vercel.app/api/getFCuser?address=${addressParam}`;
+    const url = `https://tower-game-backend.vercel.app/api/checkNFT`;
     const options = {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-secret-key":
           "bc21be10b042875430edf454b4f50604a19789c5ae4478ea68ef7eb973246a3b",
       },
       credentials: "include",
+      body: JSON.stringify({
+        addresses: addresses,
+      }),
     };
 
     const res = await fetch(url, options);

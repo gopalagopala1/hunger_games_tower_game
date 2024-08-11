@@ -35,54 +35,37 @@
             </div>
             <div class="team-summary">
               <div class="team-details-table">
-                <img
+                <!-- <img
                   loading="lazy"
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/a03ce52e33897c0985770c7c2dd604c63df5a421bcef88ae906f02ca32a8df10?apiKey=0e14ce67bb76481cb40ff58c7f753be2&&apiKey=0e14ce67bb76481cb40ff58c7f753be2"
                   class="team-logo"
                   alt="Team Kappa Logo"
-                />
-                <span class="team-name">Team Kappa</span>
+                /> -->
+                <div
+                  class="flex items-center justify-start"
+                  id="team-members-pfps-modal"
+                ></div>
+                <span id="team-modal-name">Team --</span>
               </div>
-              <div class="data-score">23564</div>
+              <div id="avg-modal-score" class="capitalize">0</div>
             </div>
           </article>
+
           <article class="global-leaderboard-container">
             <div class="global-leaderboard-title">Global Leaderboard</div>
             <div class="global-leaderboard-separator"></div>
-            <div class="global-leaderboard-rows">
-              <div class="global-leaderboard-header-row">
-                <div class="header-row">
-                  <div class="data-rank">#</div>
-                  <div class="data-team-name">Team name</div>
-                </div>
-                <div class="global-data-team-average">Avg. Score</div>
-              </div>
-              <div class="global-leaderboard-body">
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">01</div>
-                    <div class="global-team-name">Alpha</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">02</div>
-                    <div class="global-team-name">Beta</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">03</div>
-                    <div class="global-team-name">Gamma</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-              </div>
+            <div
+              id="leaderboard-body-header"
+              class="board-table-header modal-header-flex !pt-[16px] !pb-[12px] font-Geist-Regular font-12"
+            >
+              <span>#</span>
+              <span>Team</span>
+              <span>Score</span>
             </div>
+            <div
+              id="leaderboard-modal-body"
+              class="font-Geist-Regular font-12 leaderboard-team-body"
+            ></div>
           </article>
           <button class="play-again-button" id="playAgainBtn" tabindex="0">
             Play Again
@@ -92,7 +75,7 @@
     </div>
 
     <!-- wallet connect modal -->
-    <div id="walletConenctModal" class="wallet-modal-container">
+    <div id="walletConnectModal" class="wallet-modal-container">
       <div id="walletModal" class="wallet-modal mobile-width !max-w-[420px]">
         <p id="nftModalHeader" class="font-Kangmas text-[48px] modal-header">
           Wallet is not connected to play.
@@ -117,11 +100,37 @@
           >
         </div>
         <div class="flex flex-col w-full gap-[8px] items-center justify-start">
-          <button id="nftModalButton" class="modal-button">
+          <button id="connect-again" class="modal-button">
             Connect different wallet
           </button>
-          <a href="#" class="opensea-link">0r, Buy on Opensea -></a>
+          <a
+            href="https://opensea.io/collection/based-games-1"
+            target="_blank"
+            class="opensea-link"
+            >0r, Buy on Opensea -></a
+          >
         </div>
+      </div>
+    </div>
+
+    <!-- DEAD PLAYER MODAL -->
+    <div id="deadmodalcontainer" class="not-found-modal-container">
+      <div id="deadmodal" class="not-found-modal mobile-width !gap-[32px]">
+        <div class="flex flex-col w-full gap-[8px] items-center justify-start">
+          <p
+            id="nftModalHeader"
+            class="font-Kangmas text-[42px] modal-header !text-start"
+          >
+            Fallen, but not forgotten. A flicker of hope remains, warrior.
+          </p>
+          <span id="nftmodalSubHeader" class="noNft-subheader !text-start"
+            >No NFT found in your connected wallet. Try connecting a different
+            wallet or buy on opensea</span
+          >
+        </div>
+        <button id="connect-again-dead" class="modal-button">
+          Connect different wallet
+        </button>
       </div>
     </div>
 
@@ -148,95 +157,91 @@
           </div>
 
           <div class="side-panel-details">
-            <!-- <div class="text-details">
-              <p class="font-Geist-Regular">
-                Bridge any amount of ETH from Ethereum Mainnet to Arbitrum and
-                earn ARB tokens!
-              </p>
-              <p class="font-Geist-Regular">Keep Pushing Higher↑</p>
-            </div> -->
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div class="top-level-info w-full">
+                <div>
+                  <span class="font-Geist-Medium font-13 sub-top-level-info"
+                    >Ends in</span
+                  >
 
-            <!-- <div class="break"></div> -->
-
-            <div class="top-level-info">
-              <div>
-                <span class="font-Geist-Medium font-13 sub-top-level-info"
-                  >Ends in</span
-                >
-
-                <br />
-                <span class="font-Geist-Medium font-18" id="ends-in"
-                  >24h 39m 34s</span
-                >
+                  <br />
+                  <span class="font-Geist-Medium font-18" id="ends-in"
+                    >24h 39m 34s</span
+                  >
+                </div>
               </div>
-              <div>
-                <span class="font-Geist-Medium font-13 sub-top-level-info"
-                  >Participants</span
+
+              <div id="leaderboard-id" class="leaderboard b-height w-full">
+                <div class="board-header">
+                  <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active font-Geist-Medium"
+                        id="global-tab"
+                        data-toggle="tab"
+                        href="#global"
+                        role="tab"
+                        aria-controls="global"
+                        aria-selected="true"
+                        >Global Leaderboard</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link font-Geist-Medium"
+                        id="team-tab"
+                        data-toggle="tab"
+                        href="#team"
+                        role="tab"
+                        aria-controls="team"
+                        aria-selected="false"
+                        >Team Leaderboard</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  id="leaderboard-body-header"
+                  class="board-table-header font-Geist-Regular font-12"
                 >
-                <br />
-                <span class="font-Geist-Medium font-18" id="part-count"
-                  >192/200</span
-                >
+                  <span>#</span>
+                  <span>Team</span>
+                  <span>Score</span>
+                </div>
+                <div class="board-header-bottom"></div>
+                <div
+                  id="leaderboard-body"
+                  class="font-Geist-Regular font-12 leaderboard-team-body"
+                ></div>
               </div>
             </div>
 
-            <div id="leaderboard-id" class="leaderboard b-height">
-              <div class="board-header">
-                <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active font-Geist-Medium"
-                      id="global-tab"
-                      data-toggle="tab"
-                      href="#global"
-                      role="tab"
-                      aria-controls="global"
-                      aria-selected="true"
-                      >Global Leaderboard</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link font-Geist-Medium"
-                      id="team-tab"
-                      data-toggle="tab"
-                      href="#team"
-                      role="tab"
-                      aria-controls="team"
-                      aria-selected="false"
-                      >Team Leaderboard</a
-                    >
-                  </li>
-                </ul>
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div id="leaderboard-team-id" class="leaderboard-team w-full">
+                <div class="leaderboard-team-header">
+                  <span>Team Name</span>
+                  <span>Avg Score</span>
+                </div>
+                <div class="leaderboard-team-body">
+                  <div class="team-details-table">
+                    <div
+                      class="flex items-center justify-start"
+                      id="team-members-pfps"
+                    ></div>
+                    <span id="team-name" class="capitalize">Team --</span>
+                  </div>
+
+                  <span id="avg-score">--</span>
+                  <!-- <span id="team-name">Team --</span> -->
+                </div>
               </div>
-              <div
-                id="leaderboard-body-header"
-                class="board-table-header font-Geist-Regular font-12"
-              >
-                <span>#</span>
-                <span>Team</span>
-                <span>Score</span>
-              </div>
-              <div class="board-header-bottom"></div>
-              <div
-                id="leaderboard-body"
-                class="font-Geist-Regular font-12"
-              ></div>
+
+              <button id="start-game">Play</button>
             </div>
-
-            <div id="leaderboard-team-id" class="leaderboard-team">
-              <div class="leaderboard-team-header">
-                <span>Team Name</span>
-                <span>Avg Score</span>
-              </div>
-
-              <div class="leaderboard-team-body">
-                <span id="team-name">Team --</span>
-                <span id="avg-score">--</span>
-              </div>
-            </div>
-
-            <button id="start-game">Play</button>
           </div>
         </div>
       </div>
@@ -262,41 +267,58 @@
         </div>
       </div>
 
-      <button id="walletButton">Connect Wallet</button>
+      <button id="walletButton">
+        <span class="pfp-container">
+          <img src="" class="" alt="" id="pfpImage" />
+          <span id="walletAddress"></span>
+        </span>
 
-      <div id="walletSelectionModal">
-        <div class="font-Kangmas font-30">Connect a Wallet</div>
-        <div class="wallet-container">
-          <div id="injectedWallets"></div>
-          <div
-            class="walletOption"
-            style="display: flex; align-items: center"
-            onclick="connectWithWalletConnect()"
-          >
-            <img
-              style="width: 24px; height: 24px; margin-right: 6px"
-              src="./assets/wallets/walletConnect.png"
-              alt="WalletConnect"
-            />
-            WalletConnect
+        <img src="assets/log-out.svg" alt="" class="log-out" />
+      </button>
+      <div id="walletConnectContainerModal" class="wallet-connect-container">
+        <div id="walletSelectionModal">
+          <div class="font-Kangmas font-30 text-white">Connect a Wallet</div>
+          <div class="wallet-container">
+            <div id="injectedWallets"></div>
+            <div class="walletOption" onclick="connectWithWalletConnect()">
+              <img
+                style="width: 24px; height: 24px; margin-right: 6px"
+                src="./assets/wallets/walletConnect.png"
+                alt="WalletConnect"
+              />
+              WalletConnect
+            </div>
           </div>
+          <button class="closeButton" onclick="closeWalletSelectionModal()">
+            Close
+          </button>
         </div>
-        <button class="closeButton" onclick="closeWalletSelectionModal()">
-          Close
-        </button>
+      </div>
+
+      <!-- toast -->
+      <div
+        id="toast-success"
+        class="flex items-center z-[1000] text-center justify-center transition-all duration-300 w-[200px] p-[16px] text-[#018a08] bg-white rounded-lg text-[14px] font-bold shadow hidden absolute -top-[3000px] left-1/2 -translate-x-1/2"
+        role="alert"
+      >
+        <div class="ms-[12px] text-[14px] font-bold toast-text">
+          ✅ Loading...
+        </div>
       </div>
     </div>
     <!-- contract abi -->
     <script src="contractABI.js"></script>
     <!-- fetching user fc details -->
     <script src="fetchFCUser.js"></script>
-    <!-- main dom load script adding onclick events -->
-    <script src="main.js"></script>
+    <script src="checkNFT.js"></script>
+    <script src="fetchTeamLeaderboard.js"></script>
+    <script src="fetchLeaderboard.js"></script>
     <script src="./dist/bundle.js"></script>
     <script src="./assets/zepto-1.1.6.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <!-- Web3Modal CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.0/dist/index.min.js"></script> -->
     <!-- WalletConnect CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
     <!-- Ethers.js CDN -->
@@ -304,604 +326,7 @@
     <!-- wagmi CDN -->
     <script src="https://unpkg.com/@wagmi/core@0.3.0/dist/index.umd.js"></script>
 
-    <!-- fetching neynar user -->
     <!-- <script>
-      const fetchFCUser = async (address) => {
-        console.log(address);
-
-        try {
-          const url = `https://api.neynar.com/v2/farcaster/user/bulk-by-address?addresses=${
-            address.length > 1 ? address.join("%2") : address[0]
-          }`;
-          const options = {
-            method: "GET",
-            headers: {
-              accept: "application/json",
-              api_key: "%NODE_ENV%NEYNAR_API_KEY",
-            },
-          };
-
-          const res = await fetch(url, options);
-
-          const data = await res.json();
-          return data;
-        } catch (err) {
-          console.log(err);
-        }
-      };
-    </script> -->
-    <!-- 
-    <script>
-      var contractABI = [
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "initialOwner",
-              type: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-          type: "constructor",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "approved",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "Approval",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "operator",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "bool",
-              name: "approved",
-              type: "bool",
-            },
-          ],
-          name: "ApprovalForAll",
-          type: "event",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "approve",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "burn",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "previousOwner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "OwnershipTransferred",
-          type: "event",
-        },
-        {
-          inputs: [],
-          name: "renounceOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-            {
-              internalType: "string",
-              name: "uri",
-              type: "string",
-            },
-          ],
-          name: "safeMint",
-          outputs: [],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "safeTransferFrom",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-            {
-              internalType: "bytes",
-              name: "data",
-              type: "bytes",
-            },
-          ],
-          name: "safeTransferFrom",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "operator",
-              type: "address",
-            },
-            {
-              internalType: "bool",
-              name: "approved",
-              type: "bool",
-            },
-          ],
-          name: "setApprovalForAll",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "Transfer",
-          type: "event",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "transferFrom",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "transferOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-          ],
-          name: "withdrawAll",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-          ],
-          name: "balanceOf",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "getApproved",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "operator",
-              type: "address",
-            },
-          ],
-          name: "isApprovedForAll",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "maxSupply",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "mintPrice",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "name",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "owner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "ownerOf",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "bytes4",
-              name: "interfaceId",
-              type: "bytes4",
-            },
-          ],
-          name: "supportsInterface",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "symbol",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "index",
-              type: "uint256",
-            },
-          ],
-          name: "tokenByIndex",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "index",
-              type: "uint256",
-            },
-          ],
-          name: "tokenOfOwnerByIndex",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "tokenURI",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "totalSupply",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          name: "walletMints",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-      ];
-      var gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
-      var contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564";
-      var web3Modal;
-      var provider;
-      var ethersProvider;
-      var signer;
-      var selectedAccount = localStorage.getItem("selectedAccount");
-      var walletConnected = false,
-        isNFTPresent = false;
-
-      function formatNumber(num) {
-        if (num >= 1e9) {
-          return (num / 1e9).toFixed(1) + "b";
-        }
-        if (num >= 1e6) {
-          return (num / 1e6).toFixed(1) + "m";
-        }
-        if (num >= 1e3) {
-          return (num / 1e3).toFixed(1) + "k";
-        }
-        return num.toString();
-      }
-    </script> -->
-
-    <script>
       const gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
       const contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564";
       var web3Modal;
@@ -931,7 +356,7 @@
       function getTokenId() {
         return tokenId;
       }
-    </script>
+    </script> -->
     <script>
       // creating supabase client
       let teamParticipants = {
@@ -965,85 +390,6 @@
       function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
       }
-      //supabase related queries
-      async function fetchLeaderboardData() {
-        try {
-          let { data, error } = await supabase
-            .from("points")
-            .select("*")
-            .eq("game_id", gameId)
-            .order("points", { ascending: false });
-
-            console.log("data", data);
-            
-          let teamTokenIds = await supabase
-            .from("teamparticipants")
-            .select("*");
-
-          let groupedByTeamId = teamTokenIds?.data.reduce(
-            (acc, participant) => {
-              const { team_id } = participant;
-              if (!acc[team_id]) {
-                acc[team_id] = [];
-              }
-              acc[team_id].push(participant);
-              return acc;
-            },
-            {}
-          );
-
-          let teamAverageScores = Object.entries(groupedByTeamId).map(
-            ([teamId, participants]) => {
-              let totalPoints = participants.reduce((acc, participant) => {
-                const points = data.find(
-                  (d) => d.tokenid === participant.tokenid
-                )?.points;
-
-                const number = parseInt(points ?? "0");
-
-                acc = acc + number;
-                console.log("acc: ", acc);
-                return acc;
-              }, 0);
-              let averageScore = totalPoints / participants.length;
-              return { teamId, averageScore };
-            }
-          );
-
-          if (activeTab === "#global-tab") {
-            data = teamAverageScores
-              ?.sort((a, b) => b.averageScore - a.averageScore)
-              ?.map((v) => {
-                return {
-                  tokenid: `Team ${capitalizeFirstLetter(
-                    teamParticipants[v.teamId]
-                  )}`,
-                  points: v.averageScore,
-                };
-              });
-          }
-
-          if (activeTab === "#team-tab") {
-            teamData?.sort((a, b) => b.points - a.points);
-
-            data = teamData;
-          }
-
-          if (error) throw error;
-          updateLeaderboard(data);
-          noOfParticipants = data?.length ?? 1;
-
-          document.getElementById(
-            "part-count"
-          ).innerHTML = `${noOfParticipants}/200`;
-
-          if (tokenId) {
-            findCurrentTeamAndAvgScore(tokenId);
-          }
-        } catch (error) {
-          console.error("Error fetching leaderboard data:", error);
-        }
-      }
 
       function updateLeaderboard(data) {
         if (activeTab === "#team-tab") {
@@ -1058,37 +404,111 @@
         }
 
         const leaderboardBody = document.querySelector("#leaderboard-body");
+        const leaderboardModalBody = document.querySelector(
+          "#leaderboard-modal-body"
+        );
+
         const leaderboardEntries = data
-          .map(
-            (entry, index) => `
+          .map((entry, index) =>
+            activeTab !== "#team-tab"
+              ? `
               <div class="board-entry">
                 <span>${index + 1}</span>
-                <span class="text-start">${entry.tokenid}</span>
-                <span>${formatNumber(entry.points)}</span>
+                <span class="text-start capitalize">${entry.team}</span>
+                <span>${formatNumber(entry.score)}</span>
               </div>
             `
+              : entry.is_alive
+              ? `
+            <div class="board-entry-team">
+                <span>${index + 1}</span>
+                <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                  ${
+                    entry.pfp_url
+                      ? `
+                <img src="${entry.pfp_url}" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+                `
+                      : `
+                <div class='w-[20px] h-[20px] rounded-full !text-white max-w-[20px] max-h-[20px] bg-[#018A08] !font-bold text-[12px] flex items-center justify-center' >  
+                P
+                  </div>
+                `
+                  }   
+                   ${
+                     entry.fname
+                       ? `<a
+                         href="https://warpcast.com/${entry.fname}"
+                         target="_blank"
+                         class="board-username "
+                       >
+                         ${entry.username}
+                       </a>`
+                       : `
+                       <span
+                         class="board-username "
+                       >
+                         Player ${index + 1}
+                       </span>
+                       `
+                   }
+                </div>
+                <span>${formatNumber(entry.score)}</span>
+              </div>
+            `
+              : `
+          <div class="board-entry-team">
+              <span>${index + 1}</span>
+              <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                    <img src="${
+                      entry.pfp_url
+                    }" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+              ${
+                entry.username
+                  ? `<strike class="board-username ">${entry.username}</strike>`
+                  : `
+                      <span class="board-username" >
+                         Player ${index + 1}
+                       </span>`
+              }
+                    </div>
+              <span>💀💀</span>
+            </div>
+          `
           )
           .join("");
+
         leaderboardBody.innerHTML = `
 
               ${leaderboardEntries}
             `;
+        leaderboardModalBody.innerHTML = `
+
+              ${leaderboardEntries}
+            `;
+        const playBtn = document.getElementById("start-game");
+        playBtn.disabled = false;
+        playBtn.style.cursor = "pointer";
+        playBtn.style.opacity = "1";
       }
 
-      function subscribeToLeaderboardUpdates() {
-        supabase
-          .from("points")
-          .on("INSERT", (payload) => {
-            fetchLeaderboardData();
-          })
-          .on("UPDATE", (payload) => {
-            fetchLeaderboardData();
-          })
-          .subscribe();
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        fetchLeaderboardData();
+      document.addEventListener("DOMContentLoaded", async function () {
+        const leaderboard = await fetchLeaderBoard();
+        updateLeaderboard(leaderboard);
+        await findCurrentTeamAndAvgScore();
+        const fc_user = await fetchFCUser([selectedAccount]);
+        if (fc_user[selectedAccount][0]) {
+          fcUserDetails = fc_user[selectedAccount][0];
+          const pfpImage = document.getElementById("pfpImage");
+          pfpImage.style.display = "block";
+          pfpImage.style.width = "24px";
+          pfpImage.style.height = "24px";
+          pfpImage.src = fcUserDetails.pfp_url;
+        }
+        const logOut = document.getElementsByClassName("log-out")[0];
+        if (logOut) {
+          logOut.style.display = "block";
+          logOut.addEventListener("click", disconnectWallet);
+        }
       });
 
       const updatePoints = async (newPoints) => {
@@ -1129,155 +549,6 @@
         }
       };
 
-      const insertData = async (tokenId, gameId) => {
-        try {
-          const response = await supabase
-            .from("points")
-            .select("*")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (!response.data) {
-            const { data, error } = await supabase
-              .from("points")
-              .insert([{ tokenid: tokenId, points: 0, game_id: gameId }])
-              .single();
-          }
-        } catch (error) {
-          console.error("Error inserting token ID:", error);
-        }
-      };
-
-      const findTeamByTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("team_id")
-            .eq("tokenid", tokenId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team found for tokenId ${tokenId}`);
-            return null;
-          }
-
-          const teamId = data.team_id;
-          const { data: teamData, error: teamError } = await supabase
-            .from("teams")
-            .select("*")
-            .eq("id", teamId)
-            .single();
-
-          if (teamError) throw teamError;
-
-          if (!teamData) {
-            console.error(`No team data found for teamId ${teamId}`);
-            return null;
-          }
-
-          return teamData;
-        } catch (error) {
-          console.error("Error finding team by tokenId:", error);
-          return null;
-        }
-      };
-
-      const getTokenIdsInTeam = async (teamId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("tokenid")
-            .eq("team_id", teamId);
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team participants found for teamId ${teamId}`);
-            return [];
-          }
-
-          return data.map((participant) => participant.tokenid);
-        } catch (error) {
-          console.error("Error getting token IDs in team:", error);
-          return [];
-        }
-      };
-
-      const getScoreForTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("points")
-            .select("points")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(
-              `No score found for tokenId ${tokenId} and gameId ${gameId}`
-            );
-            return 0;
-          }
-
-          return data.points;
-        } catch (error) {
-          console.error("Error getting score for tokenId:", error);
-          return 0;
-        }
-      };
-
-      function addUniqueEntry(teamData, newEntry) {
-        const map = new Map(teamData.map((item) => [item.tokenid, item]));
-        map.set(newEntry.tokenid, newEntry);
-        return Array.from(map.values());
-      }
-
-      const findCurrentTeamAndAvgScore = async (tokenId) => {
-        try {
-          // Assuming there's a function to find the current team of a tokenId
-          const team = await findTeamByTokenId(tokenId);
-          // Assuming there's a function to get all token ids in a team
-          const teamTokenIds = await getTokenIdsInTeam(team.id);
-
-          // Assuming there's a function to get the score for a tokenId
-          let totalScore = 0;
-          for (const id of teamTokenIds) {
-            const score = await getScoreForTokenId(id);
-            totalScore += score;
-
-            teamData = addUniqueEntry(teamData, { tokenid: id, points: score });
-
-            if (id === tokenId) {
-              document.getElementById("top-score").innerHTML =
-                formatNumber(score);
-            }
-          }
-          const avgScore = totalScore / teamTokenIds.length;
-
-          const leaderboardTeam = document.getElementById(
-            "leaderboard-team-id"
-          );
-          leaderboardTeam.classList.remove("hide");
-
-          const leaderboard = document.getElementById("leaderboard-id");
-          leaderboard.classList.remove("b-height");
-          leaderboard.classList.add("a-height");
-          document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
-
-          document.getElementById("avg-score").innerHTML = avgScore.toFixed(2);
-        } catch (error) {
-          console.error(
-            "Error finding team or calculating average score:",
-            error
-          );
-        }
-      };
-
       document.addEventListener("DOMContentLoaded", function () {
         const tabs = document.querySelectorAll(".nav-link");
 
@@ -1287,7 +558,7 @@
         }
 
         tabs.forEach((tab) => {
-          tab.addEventListener("click", function (event) {
+          tab.addEventListener("click", async function (event) {
             event.preventDefault();
 
             // Remove 'active' class from all tabs and 'show active' from all tab contents
@@ -1299,9 +570,21 @@
             // Get the target tab content and add 'show active' class
             const targetId = tab.getAttribute("href");
             activeTab = `${targetId}-tab`;
-            fetchLeaderboardData();
+            if (tab.href.includes("global")) {
+              const leaderboard = await fetchLeaderBoard();
+              updateLeaderboard(leaderboard);
+            } else {
+              // team leaderboard fetch and update
+              const teamLeaderboard = await fetchTeamLeaderboard();
+
+              updateLeaderboard(teamLeaderboard.teamData);
+            }
           });
         });
+
+        if (tokenId) {
+          findCurrentTeamAndAvgScore();
+        }
       });
     </script>
     <script>
@@ -1359,9 +642,9 @@
       }
 
       async function overShowOver() {
-        window.location.href = window.location.href.includes("?s=")
-          ? window.location.href.split("?")[0]
-          : window.location.href + "?s=" + +new Date();
+        window.location.href = window.location.href.includes("?")
+          ? window.location.href.split("?")[0] + "?playagain=true"
+          : window.location.href + "?playagain=true";
       }
 
       let prevScore = 0;
@@ -1375,12 +658,12 @@
           score = s;
           updatePoints(s - prevScore);
           prevScore = s;
-          fetchLeaderboardData();
+          fetchLeaderBoard();
         },
         setGameSuccess: function (s) {
           successCount = s;
         },
-        setGameFailed: function (f) {
+        setGameFailed: async function (f) {
           $("#score").text(score);
 
           if (f >= 3) {
@@ -1390,12 +673,39 @@
               gameEnded.style.display = "flex";
               const scoreModal = document.getElementById("modal-score");
               scoreModal.innerText = score;
+
               const playAgainBtn = document.getElementById("playAgainBtn");
               playAgainBtn.onclick = () => {
                 overShowOver();
               };
+              const leaderboard = await fetchLeaderBoard();
+              await updateLeaderboard(leaderboard);
+              // find team data here
+              const teamData = await fetchTeamLeaderboard();
+              const team = teamData.team;
+              const avg_score = teamData.averageScore;
+              const modalTeamName = document.getElementById("team-modal-name");
+              const modalScore = document.getElementById("avg-modal-score");
+              modalTeamName.innerHTML = `Team ${team.clan} `;
+              modalScore.innerHTML = avg_score;
+              const pfpsContainer = document.getElementById(
+                "team-members-pfps-modal"
+              );
+              const pfpsData = await Pfps();
+              const pfpImages = pfpsData.pfps;
+              const remainingLength = pfpsData.remainingLength;
+
+              pfpsContainer.innerHTML = `
+              ${pfpImages.map((pfp) => {
+                return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+              })}
+                <div
+                class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                >
+                +${remainingLength}
+                </div>
+                `;
             }
-            // overShowOver();
           }
         },
       };
@@ -1460,15 +770,15 @@
             e.preventDefault();
           };
 
-          const walletConenctModalContainer =
-            document.getElementById("walletConenctModal");
-          const walletConenctModal = document.getElementById("walletModal");
+          const walletConnectModalContainer =
+            document.getElementById("walletConnectModal");
+          const walletConnectModal = document.getElementById("walletModal");
 
-          if (walletConenctModalContainer) {
-            walletConenctModalContainer.style.display = "flex";
+          if (walletConnectModalContainer) {
+            walletConnectModalContainer.style.display = "flex";
             // note: want to close modal when clicked
-            walletConenctModalContainer.onclick = () => {
-              walletConenctModalContainer.style.display = "none";
+            walletConnectModalContainer.onclick = () => {
+              walletConnectModalContainer.style.display = "none";
             };
             walletConnectModal.onclick = (e) => {
               e.preventDefault();
@@ -1504,21 +814,56 @@
       };
     </script> -->
     <script>
+      // async function reconnectToProvider(type, name) {
+      //   if (type === "walletconnect") {
+      //     return await web3Modal.connectTo("walletconnect");
+      //   }
+
+      //   if (type === "injected") {
+      //     setTimeout(()=>{
+      //       console.log(window.ethereum.providers);
+      //     },1000)
+
+      //     const provider = window?.ethereum?.providers?.find((provider) => {
+      //       if (provider[name]) {
+      //         return provider;
+      //       }
+      //     });
+      //     window?.ethereum?.setSelectedProvider(provider);
+      //     await provider.request({ method: "eth_requestAccounts" });
+      //     return provider;
+      //   }
+      // }
+
       async function reconnectToProvider(type, name) {
         if (type === "walletconnect") {
           return await web3Modal.connectTo("walletconnect");
         }
-
         if (type === "injected") {
-          const provider = window.ethereum.providers.find((provider) => {
-            if (provider[name]) {
-              return provider;
-            }
-          });
+          if (!window.ethereum) {
+            throw new Error(
+              "No Ethereum provider found. Please install a wallet extension."
+            );
+          }
+
+          if (!window.ethereum.providers) {
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            return window.ethereum;
+          }
+
+          const provider = window.ethereum.providers.find(
+            (provider) => provider[name]
+          );
+          if (!provider) {
+            throw new Error(`Provider ${name} not found`);
+          }
+
           window.ethereum.setSelectedProvider(provider);
           await provider.request({ method: "eth_requestAccounts" });
           return provider;
         }
+
+        throw new Error(`Unsupported provider type: ${type}`);
       }
 
       async function init() {
@@ -1544,7 +889,10 @@
         const savedAccount = localStorage.getItem("selectedAccount");
         const savedProviderType = localStorage.getItem("providerType");
         const savedName = localStorage.getItem("injectedName");
-        console.log(savedAccount);
+
+        if (savedAccount) {
+          selectedAccount = savedAccount;
+        }
 
         if (savedAccount && savedProviderType && savedName) {
           provider = await reconnectToProvider(savedProviderType, savedName);
@@ -1553,14 +901,30 @@
 
           selectedAccount = savedAccount;
 
+          console.log("selected", selectedAccount);
+
           if (selectedAccount) {
             updateButton();
-            isNFTPresent = await checkNFT(selectedAccount);
+            const response = await checkNFT(selectedAccount);
+            console.log("isNFT", response);
+
+            if (response.tokenId) {
+              isNFTPresent = true;
+              tokenId = response.tokenId;
+            } else {
+              if (response.message.includes("dead")) {
+                isNFTPresent = true;
+                isPlayerDead = true;
+              } else {
+                isNFTPresent = false;
+              }
+            }
+
             walletConnected = true;
           }
 
           if (isNFTPresent) {
-            await findCurrentTeamAndAvgScore(tokenId);
+            await findCurrentTeamAndAvgScore();
           }
         }
       }
@@ -1570,9 +934,8 @@
 
         function createWalletOption(key, logoUrl, provider, name) {
           const walletOption = document.createElement("div");
-          walletOption.className = "walletOption";
-          walletOption.innerHTML = `<div style=" display: flex;
-        align-items: center;"><img style="width:24px; height: 24px; margin-right: 6px;" src="${logoUrl}" alt="${name}"/> ${name}</div>`;
+          // walletOption.className = "walletOption";
+          walletOption.innerHTML = `<div class="walletOption"><img style="width:24px; height: 24px; margin-right: 6px;" src="${logoUrl}" alt="${name}"/> ${name}</div>`;
           walletOption.onclick = () => {
             selectInjectedWallet(key, provider);
           };
@@ -1629,35 +992,57 @@
         if (nftModal) {
           nftModal.style.display = "none";
         }
-        if (provider && !selectedAccount) {
+
+        if (!provider || !selectedAccount) {
           toggleWalletSelectionModal(true);
         } else {
-          toggleWalletSelectionModal(true);
-          // const walletBtn = document.getElementById("walletButton");
-          // walletBtn.innerText =
-          //   selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
-          // const textContainer =
-          //   document.getElementsByClassName("side-panel-header");
-          // const playButtonElement = document.getElementById("start-game");
+          toggleWalletSelectionModal(false);
+          console.log("selectedAccount inside", selectedAccount);
 
-          // if (textContainer && playButtonElement) {
-          //   textContainer[0].innerHTML = `
-          //   Your score is
-          //   <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
-          //   Higher↑          `;
+          const walletBtn = document.getElementById("walletAddress");
+          walletBtn.innerText =
+            selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
+          const textContainer =
+            document.getElementsByClassName("side-panel-header");
+          const playButtonElement = document.getElementById("start-game");
+          const score = document.getElementById("top-score");
+          if (textContainer && playButtonElement && score.innerText === "0") {
+            textContainer[0].innerHTML = `
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
 
-          //   playButtonElement.textContent = "Play game";
-          // }
-          // const fc_user = await fetchFCUser([selectedAccount]);
-          // console.log(fc_user);
-
-          // const pfpImage = document.getElementById("pfpImg");
+            playButtonElement.textContent = "Play game";
+          }
         }
       }
+      console.log("tokenID", tokenId);
 
       function toggleWalletSelectionModal(show) {
         const modal = document.getElementById("walletSelectionModal");
-        modal.style.display = show ? "flex" : "none";
+        const modalContainer = document.getElementById(
+          "walletConnectContainerModal"
+        );
+        if (show) {
+          modalContainer.style.display = "flex";
+          setTimeout(() => {
+            modal.style.top = "50%";
+          }, 200);
+          modalContainer.onclick = () => {
+            modal.style.top = "250%";
+            setTimeout(() => {
+              modalContainer.style.display = "none";
+            }, 200);
+          };
+          modal.onclick = (e) => {
+            e.preventDefault();
+          };
+        } else {
+          modal.style.top = "250%";
+          setTimeout(() => {
+            modalContainer.style.display = "none";
+          }, 200);
+        }
       }
 
       function closeWalletSelectionModal() {
@@ -1678,6 +1063,32 @@
             await selectedProvider.request({ method: "eth_requestAccounts" });
           }
           await connectWallet(key, selectedProvider, "injected");
+          if (selectedAccount) {
+            const fc_user = await fetchFCUser([selectedAccount]);
+            if (fc_user[selectedAccount][0]) {
+              fcUserDetails = fc_user[selectedAccount][0];
+              console.log("fc obj", fcUserDetails);
+              const pfpImage = document.getElementById("pfpImage");
+              pfpImage.style.display = "block";
+              pfpImage.style.width = "24px";
+              pfpImage.style.height = "24px";
+              pfpImage.src = fcUserDetails.pfp_url;
+            }
+            const logOut = document.getElementsByClassName("log-out")[0];
+            if (logOut) {
+              logOut.style.display = "block";
+              logOut.addEventListener("click", disconnectWallet);
+            }
+            const teamTab = document.getElementById("team-tab");
+            teamTab.style.display = "block";
+            if (tokenId) {
+              findCurrentTeamAndAvgScore();
+            }
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
+          }
         } catch (e) {
           console.log("Could not connect to the selected wallet", e);
         }
@@ -1709,15 +1120,40 @@
 
           walletConnected = true;
 
+          const fc_user = await fetchFCUser([accounts[0]]);
+          if (fc_user[selectedAccount][0]) {
+            fcUserDetails = fc_user[selectedAccount][0];
+            console.log("fc obj", fcUserDetails);
+            const pfpImage = document.getElementById("pfpImage");
+            pfpImage.style.display = "block";
+            pfpImage.style.width = "24px";
+            pfpImage.style.height = "24px";
+            pfpImage.src = fcUserDetails.pfp_url;
+          }
+          const logOut = document.getElementsByClassName("log-out")[0];
+          if (logOut) {
+            logOut.style.display = "block";
+            logOut.addEventListener("click", disconnectWallet);
+          }
+          const teamTab = document.getElementById("team-tab");
+          teamTab.style.display = "block";
+          const leaderboardTeam = document.getElementById(
+            "leaderboard-team-id"
+          );
+          leaderboardTeam.classList.remove("hide");
+          const leaderboardTeamBody =
+            document.getElementById("leaderboard-body");
+          leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+          leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
           const textContainer =
             document.getElementsByClassName("side-panel-header");
           const playButtonElement = document.getElementById("start-game");
 
           if (textContainer && playButtonElement) {
             textContainer[0].innerHTML = `
-            Your score is
-            <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
-            Higher↑          `;
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
 
             playButtonElement.textContent = "Play game";
           }
@@ -1733,28 +1169,55 @@
 
           selectedProvider.on("disconnect", (error) => {
             console.log("Disconnected:", error);
+
+            // disconnecting wallet
             const textContainer =
               document.getElementsByClassName("side-panel-header");
             const playButtonElement = document.getElementById("start-game");
-
+            const walletBtnText = document.getElementById("walletAddress");
+            walletBtnText.innerText = "Connect Wallet";
+            const pfp = document.getElementById("pfpImage");
+            pfp.style.display = "none";
+            const logout = document.getElementsByClassName("log-out");
+            logout.style.display = "none";
             if (!walletConnected && textContainer && playButtonElement) {
               textContainer[0].innerHTML = `
-          Get as <br />
-          Higher↑ <br />
-          as you can!
-          `;
+            Get as <br />
+            Higher↑ <br />
+            as you can!
+            `;
 
               playButtonElement.textContent = "Connect Wallet to play";
             }
             resetButton();
+            const leaderboardTeam = document.getElementById(
+              "leaderboard-team-id"
+            );
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeam.classList.add("hide");
+            leaderboardTeamBody.style.height = "calc(100vh - 550px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 550px)";
           });
+          const response = await checkNFT(selectedAccount);
+          console.log("isNFT", response);
 
-          console.log(selectedAccount);
-
-          isNFTPresent = await checkNFT(selectedAccount);
+          if (response.tokenId) {
+            isNFTPresent = true;
+            tokenId = response.tokenId;
+          } else {
+            if (response.message.includes("dead")) {
+              isNFTPresent = true;
+              isPlayerDead = true;
+            } else {
+              isNFTPresent = false;
+            }
+          }
 
           if (isNFTPresent) {
-            fetchLeaderboardData();
+            const leaderboard = await fetchLeaderBoard();
+            updateLeaderboard(leaderboard);
+            console.log("leaderboard data: ", leaderboard);
           }
         } catch (e) {
           console.log("Could not get a wallet connection", e);
@@ -1764,7 +1227,7 @@
       function updateButton() {
         if (selectedAccount) {
           document.getElementById(
-            "walletButton"
+            "walletAddress"
           ).innerText = `${selectedAccount.substring(
             0,
             6
@@ -1776,7 +1239,7 @@
       }
 
       function resetButton() {
-        document.getElementById("walletButton").innerText = "Connect Wallet";
+        document.getElementById("walletAddress").innerText = "Connect Wallet";
         provider = null;
         selectedAccount = null;
         localStorage.removeItem("selectedAccount");
@@ -1784,102 +1247,138 @@
         localStorage.removeItem("injectedName");
       }
 
-      async function checkNFT(address) {
-        console.log("address nft inside", address);
-        console.log("contr add", contractAddress);
-        console.log("contr abi", contractABI);
-        console.log("contr signer", signer);
+      // async function checkNFT(address) {
+      //   const contract = new ethers.Contract(
+      //     contractAddress,
+      //     contractABI,
+      //     signer
+      //   );
 
-        const contract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          signer
-        );
+      //   try {
+      //     const balance = await contract.balanceOf(address);
+      //     console.log("balance", balance);
 
-        try {
-          const balance = await contract.balanceOf(address);
-          console.log("balance", balance);
+      //     const nftStatus = `Balance of NFTs for address ${address}: ${balance.toString()}`;
+      //     console.log("balance status", nftStatus);
 
-          const nftStatus = `Balance of NFTs for address ${address}: ${balance.toString()}`;
-          console.log("balance status", nftStatus);
+      //     if (balance.gt(0)) {
+      //       tokenId = (
+      //         await contract.tokenOfOwnerByIndex(address, 0)
+      //       ).toString();
 
-          if (balance.gt(0)) {
-            tokenId = (
-              await contract.tokenOfOwnerByIndex(address, 0)
-            ).toString();
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   } catch (error) {
+      //     console.error("Error checking NFT presence:", error);
+      //     return false;
+      //   }
+      // }
 
-            return true;
-          } else {
-            return false;
+      async function disconnectWallet() {
+        if (provider && provider.disconnect) {
+          try {
+            await provider.disconnect();
+          } catch (error) {
+            console.log("Error disconnecting wallet:", error);
           }
-        } catch (error) {
-          console.error("Error checking NFT presence:", error);
-          return false;
+        }
+
+        resetButton();
+
+        const pfpImage = document.getElementById("pfpImage");
+        const logOut = document.getElementsByClassName("log-out")[0];
+        if (pfpImage) pfpImage.style.display = "none";
+        if (logOut) logOut.style.display = "none";
+
+        fcUserDetails = null;
+        walletConnected = false;
+        selectedAccount = null;
+        provider = null;
+        localStorage.removeItem("selectedAccount");
+        const textContainer =
+          document.getElementsByClassName("side-panel-header")[0];
+        const playButtonElement = document.getElementById("start-game");
+
+        if (textContainer && playButtonElement) {
+          textContainer.innerHTML = `
+        Get as <br />
+        Higher↑ <br />
+        as you can!
+      `;
+          playButtonElement.textContent = "Connect Wallet to play";
+        }
+
+        console.log("Wallet disconnected successfully");
+        overShowOver();
+      }
+
+      async function changeWallet() {
+        if (provider && provider.accountsChanged) {
+          try {
+            await provider.accountsChanged();
+          } catch (error) {
+            console.log("Error disconnecting wallet:", error);
+          }
         }
       }
 
-      window.addEventListener("load", async () => {
+      async function Pfps() {
+        const teamData = await fetchTeamLeaderboard();
+        const teamMembers = teamData.teamData;
+        const pfps = teamMembers.filter((member) => member.pfp_url) ?? [];
+        const slicedPfps = pfps.slice(0, 3) ?? [];
+        const remainingLength = pfps.length - 3 ?? 0;
+
+        return {
+          pfps: slicedPfps,
+          remainingLength,
+        };
+      }
+      async function findCurrentTeamAndAvgScore() {
+        const teamData = await fetchTeamLeaderboard();
+        console.log(teamData);
+        const team = teamData.team;
+        const teamMembers = teamData.teamData;
+        const avg_score = teamData.averageScore;
+        console.log(teamData);
+        document.getElementById("top-score").innerHTML =
+          teamData.yourScore ?? 0;
+        document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
+        document.getElementById("avg-score").innerHTML = avg_score.toFixed(2);
+        const modalTeamName = document.getElementById("team-modal-name");
+        const modalScore = document.getElementById("avg-modal-score");
+        if (modalScore && modalTeamName) {
+          modalTeamName.innerHTML = `Team ${team.clan}`;
+          modalScore.innerHTML = avg_score.toFixed(2);
+        }
+        const pfpsContainer = document.getElementById("team-members-pfps");
+        const pfpsData = await Pfps();
+        const pfpImages = pfpsData.pfps;
+        console.log(pfpImages);
+        const remainingLength = pfpsData.remainingLength;
+
+        pfpsContainer.innerHTML = `
+        ${pfpImages.map((pfp) => {
+          return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+        })}
+                      <div
+                        class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                      >
+                        +${remainingLength}
+                      </div>
+        `;
+      }
+
+      // window.addEventListener("load", async () => {
+      //   await init();
+      // });
+      window.addEventListener("DOMContentLoaded", async () => {
         await init();
       });
     </script>
-    <!-- <script>
-      document.addEventListener("DOMContentLoaded", async function () {
-        const nftModalButton = document.getElementById("nftModalButton");
-
-        if (nftModalButton) {
-          document
-            .getElementById("nftModalButton")
-            .addEventListener("click", onButtonClick);
-        }
-
-        const playButtonElement = document.getElementById("start-game");
-
-        if (playButtonElement) {
-          document
-            .getElementById("start-game")
-            .addEventListener("click", startGame);
-        }
-        if (selectedAccount) {
-          const walletBtn = document.getElementById("walletButton");
-          walletBtn.innerText =
-            selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
-
-          const textContainer =
-            document.getElementsByClassName("side-panel-header");
-
-          if (textContainer && playButtonElement) {
-            textContainer[0].innerHTML = `
-            Your score is
-            <span id="top-score" class="font-Kangmas font-bold">${0}</span>! Can be
-            Higher↑`;
-
-            playButtonElement.textContent = "Play game";
-            walletConnected = true;
-          }
-
-          // fetching fc details of user
-          // const fetchUser = await fetchFCUser(s);
-
-          // console.log(fetchFCUser);
-        }
-      });
-    </script> -->
-    <!-- <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const textContainer =
-          document.getElementsByClassName("side-panel-header");
-        const playButtonElement = document.getElementById("start-game");
-
-        if (!walletConnected && textContainer && playButtonElement) {
-          textContainer[0].innerHTML = `
-          Get as <br />
-          Higher↑ <br />
-          as you can!
-          `;
-
-          playButtonElement.textContent = "Connect Wallet to play";
-        }
-      });
-    </script> -->
+    <!-- main dom load script adding onclick events -->
+    <script src="main.js"></script>
   </body>
 </html>

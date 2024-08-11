@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider npm run build && node index.js",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js --mode production",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build && node index.js",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js --mode production",
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack serve --config webpack.config.js --mode development"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "cooljs": "^1.0.2",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.1",
+    "framer-motion": "^11.3.24",
     "tree": "^0.1.3"
   }
 }

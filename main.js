@@ -5,16 +5,25 @@ const startGame = () => {
       e.preventDefault();
     };
 
-    const walletConenctModalContainer =
-      document.getElementById("walletConenctModal");
-    const walletConenctModal = document.getElementById("walletModal");
+    const walletConnectModalContainer =
+      document.getElementById("walletConnectModal");
+    const walletConnectModal = document.getElementById("walletModal");
 
-    if (walletConenctModalContainer) {
-      walletConenctModalContainer.style.display = "flex";
-      // note: want to close modal when clicked
-      walletConenctModalContainer.onclick = () => {
-        walletConenctModalContainer.style.display = "none";
+    if (walletConnectModalContainer) {
+      walletConnectModalContainer.style.display = "flex";
+      setTimeout(() => {
+        walletConnectModal.style.top = "50%";
+      }, 200);
+      walletConnectModalContainer.onclick = () => {
+        walletConnectModal.style.top = "250%";
+        setTimeout(() => {
+          walletConnectModalContainer.style.display = "none";
+        }, 200);
       };
+      walletConnectModal.onclick = (e) => {
+        e.preventDefault();
+      };
+
       walletConnectModal.onclick = (e) => {
         e.preventDefault();
       };
@@ -25,21 +34,77 @@ const startGame = () => {
   console.log("is nft present: ", isNFTPresent);
   if (!isNFTPresent) {
     const nftModal = document.getElementById("nftNotFoundContainer");
+    const notFoundModal = document.getElementById("notFoundModal");
 
     if (nftModal) {
       nftModal.style.display = "flex";
+      setTimeout(() => {
+        notFoundModal.style.top = "50%";
+      }, 200);
       nftModal.onclick = () => {
-        nftModal.style.display = "none";
+        notFoundModal.style.top = "250%";
+        setTimeout(() => {
+          nftModal.style.display = "none";
+        }, 200);
       };
 
       notFoundModal.onclick = (e) => {
         e.preventDefault();
       };
+      const connect = document.getElementById("connect-again");
+      if (connect) {
+        connect.onclick = () => {
+          notFoundModal.style.top = "250%";
+          setTimeout(() => {
+            nftModal.style.display = "none";
+          }, 200);
+          toggleWalletSelectionModal(true);
+        };
+      }
     }
 
     return;
   }
 
+  if (isPlayerDead) {
+    const deadModalContainer = document.getElementById("deadmodalcontainer");
+    const playerdeadmodal = document.getElementById("deadmodal");
+
+    if (deadModalContainer) {
+      deadModalContainer.style.display = "flex";
+      setTimeout(() => {
+        playerdeadmodal.style.top = "50%";
+      }, 200);
+      deadModalContainer.onclick = () => {
+        playerdeadmodal.style.top = "250%";
+        setTimeout(() => {
+          deadModalContainer.style.display = "none";
+        }, 200);
+      };
+
+      playerdeadmodal.onclick = (e) => {
+        e.preventDefault();
+      };
+      const connect = document.getElementById("connect-again-dead");
+      if (connect) {
+        connect.onclick = (e) => {
+          e.preventDefault();
+          playerdeadmodal.style.top = "250%";
+          setTimeout(() => {
+            deadModalContainer.style.display = "none";
+          }, 200);
+          toggleWalletSelectionModal(true);
+        };
+      }
+    }
+
+    return;
+  }
+
+  const globalTab = document.getElementById("global-tab");
+  if (!globalTab.classList.contains("active")) {
+    globalTab?.click();
+  }
   gameStart = true;
   setTimeout(function () {
     game.playBgm();
@@ -49,47 +114,65 @@ const startGame = () => {
 };
 
 document.addEventListener("DOMContentLoaded", async function () {
+  // open nft not found modal handling
   const nftModalButton = document.getElementById("nftModalButton");
   if (nftModalButton) {
     document
       .getElementById("nftModalButton")
       .addEventListener("click", onButtonClick);
   }
+
+  //  handling hero text and button text change
   const textContainer = document.getElementsByClassName("side-panel-header");
   const playButtonElement = document.getElementById("start-game");
 
   if (!walletConnected && textContainer && playButtonElement) {
     textContainer[0].innerHTML = `
-  Get as <br />
-  Higher↑ <br />
-  as you can!
-  `;
+      Get as <br />
+      Higher↑ <br />
+      as you can!
+      `;
 
     playButtonElement.textContent = "Connect Wallet to play";
   }
+
+  const walletBtn = document.getElementById("walletButton");
+  const walletBtnText = document.getElementById("walletAddress");
+
   if (playButtonElement) {
-    document.getElementById("start-game").addEventListener("click", startGame);
+    console.log("signignign");
+
+    playButtonElement.addEventListener("click", startGame);
   }
+
   if (selectedAccount) {
-    const walletBtn = document.getElementById("walletButton");
-    walletBtn.innerText =
+    walletBtnText.innerText =
       selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
 
     const textContainer = document.getElementsByClassName("side-panel-header");
 
     if (textContainer && playButtonElement) {
       textContainer[0].innerHTML = `
-            Your score is
-            <span id="top-score" class="font-Kangmas font-bold">${0}</span>! Can be
-            Higher↑`;
+        Your score is
+        <span id="top-score" class="font-Kangmas font-bold">${0}</span>! Can be
+        Higher↑`;
 
       playButtonElement.textContent = "Play game";
       walletConnected = true;
     }
-
-    // fetching fc details of user
-    // const fetchUser = await fetchFCUser(s);
-
-    // console.log(fetchFCUser);
+  } else {
+    const logout = document.getElementsByClassName("log-out")[0];
+    walletBtnText.innerText = "Connect Wallet";
+    logout.style.display = "none";
+    walletBtn.onclick = () => {
+      toggleWalletSelectionModal(true);
+    };
+    const leaderboardTeam = document.getElementById("leaderboard-team-id");
+    const leaderboardTeamBody = document.getElementById("leaderboard-body");
+    leaderboardTeam.classList.add("hide");
+    leaderboardTeamBody.style.height = "calc(100vh - 550px)";
+    leaderboardTeamBody.style.maxHeight = "calc(100vh - 550px)";
+    const teamTab = document.getElementById("team-tab");
+    teamTab.style.display = "none";
   }
 });

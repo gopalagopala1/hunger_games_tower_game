@@ -544,7 +544,8 @@ var contractABI = [
   },
 ];
 var gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
-var contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564";
+var contractAddress = "0x298DeFeCd684Eb48474363dA6777805D3B576431";
+// var contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564"; old one
 var web3Modal;
 var provider;
 var ethersProvider;
@@ -552,40 +553,23 @@ var signer;
 var selectedAccount = localStorage.getItem("selectedAccount");
 var walletConnected = false,
   isNFTPresent = false;
+var isPlayerDead = false;
+var tokenId,
+  noOfParticipants = 0;
+
+function getTokenId() {
+  return tokenId;
+}
 
 function formatNumber(num) {
   if (num >= 1e9) {
-    return (num / 1e9).toFixed(1) + "b";
+    return (num / 1e9).toFixed(2) + "b";
   }
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + "m";
+    return (num / 1e6).toFixed(2) + "m";
   }
   if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + "k";
+    return (num / 1e3).toFixed(2) + "k";
   }
   return num.toString();
 }
-
-  var gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
-  var contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564";
-  var web3Modal;
-  var provider;
-  var ethersProvider;
-  var signer;
-  var selectedAccount = localStorage.getItem("selectedAccount");
-  var walletConnected = false,
-    isNFTPresent = false;
-  
-  function formatNumber(num) {
-    if (num >= 1e9) {
-      return (num / 1e9).toFixed(1) + "b";
-    }
-    if (num >= 1e6) {
-      return (num / 1e6).toFixed(1) + "m";
-    }
-    if (num >= 1e3) {
-      return (num / 1e3).toFixed(1) + "k";
-    }
-    return num.toString();
-  }
-  
