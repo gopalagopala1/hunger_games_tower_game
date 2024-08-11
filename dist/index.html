@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui"
+    />
+    <title>Tower Building</title>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="endGameModal.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <!-- end game modal -->
+    <div
+      id="play-again-modal"
+      class="play-again-modal-container"
+      style="display: none !important"
+    >
+      <section class="end-container">
+        <p class="score-info">
+          You scored <span id="modal-score"></span> Can be Higher↑
+        </p>
+        <section class="content-section">
+          <article class="leaderboard-header">
+            <div class="leaderboard-header-content">
+              <div class="leaderboard-title font-Geist">
+                <div>Team name</div>
+                <div>Avg Score</div>
+              </div>
+              <div class="separator"></div>
+            </div>
+            <div class="team-summary">
+              <div class="team-details-table">
+                <!-- <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/a03ce52e33897c0985770c7c2dd604c63df5a421bcef88ae906f02ca32a8df10?apiKey=0e14ce67bb76481cb40ff58c7f753be2&&apiKey=0e14ce67bb76481cb40ff58c7f753be2"
+                  class="team-logo"
+                  alt="Team Kappa Logo"
+                /> -->
+                <div
+                  class="flex items-center justify-start"
+                  id="team-members-pfps-modal"
+                ></div>
+                <span id="team-modal-name">Team --</span>
+              </div>
+              <div id="avg-modal-score" class="capitalize">0</div>
+            </div>
+          </article>
+
+          <article class="global-leaderboard-container">
+            <div class="global-leaderboard-title">Global Leaderboard</div>
+            <div class="global-leaderboard-separator"></div>
+            <div
+              id="leaderboard-body-header"
+              class="board-table-header modal-header-flex !pt-[16px] !pb-[12px] font-Geist-Regular font-12"
+            >
+              <span>#</span>
+              <span>Team</span>
+              <span>Score</span>
+            </div>
+            <div
+              id="leaderboard-modal-body"
+              class="font-Geist-Regular font-12 leaderboard-team-body"
+            ></div>
+          </article>
+          <button class="play-again-button" id="playAgainBtn" tabindex="0">
+            Play Again
+          </button>
+        </section>
+      </section>
+    </div>
+
+    <!-- wallet connect modal -->
+    <div id="walletConnectModal" class="wallet-modal-container">
+      <div id="walletModal" class="wallet-modal mobile-width !max-w-[420px]">
+        <p id="nftModalHeader" class="font-Kangmas text-[48px] modal-header">
+          Wallet is not connected to play.
+        </p>
+        <button id="nftModalButton" class="modal-button">Connect wallet</button>
+      </div>
+    </div>
+
+    <!-- no nft modal -->
+    <div id="nftNotFoundContainer" class="not-found-modal-container">
+      <div id="notFoundModal" class="not-found-modal mobile-width !gap-[32px]">
+        <div class="flex flex-col w-full gap-[8px] items-center justify-start">
+          <p
+            id="nftModalHeader"
+            class="font-Kangmas font-48 modal-header !text-start"
+          >
+            Acquire an NFT to join the fray!
+          </p>
+          <span id="nftmodalSubHeader" class="noNft-subheader !text-start"
+            >No NFT found in your connected wallet. Try connecting a different
+            wallet or buy on opensea</span
+          >
+        </div>
+        <div class="flex flex-col w-full gap-[8px] items-center justify-start">
+          <button id="connect-again" class="modal-button">
+            Connect different wallet
+          </button>
+          <a
+            href="https://opensea.io/collection/based-games-1"
+            target="_blank"
+            class="opensea-link"
+            >0r, Buy on Opensea -></a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- DEAD PLAYER MODAL -->
+    <div id="deadmodalcontainer" class="not-found-modal-container">
+      <div id="deadmodal" class="not-found-modal mobile-width !gap-[32px]">
+        <div class="flex flex-col w-full gap-[8px] items-center justify-start">
+          <p
+            id="nftModalHeader"
+            class="font-Kangmas text-[42px] modal-header !text-start"
+          >
+            Fallen, but not forgotten. A flicker of hope remains, warrior.
+          </p>
+          <span id="nftmodalSubHeader" class="noNft-subheader !text-start"
+            >No NFT found in your connected wallet. Try connecting a different
+            wallet or buy on opensea</span
+          >
+        </div>
+        <button id="connect-again-dead" class="modal-button">
+          Connect different wallet
+        </button>
+      </div>
+    </div>
+
+    <!-- mobile modal -->
+    <div
+      id="nftNotFoundContainer"
+      class="not-found-modal-container mobile-show"
+    >
+      <div id="notFoundModal" class="not-found-modal mobile-width">
+        <p id="nftModalHeader" class="font-Kangmas modal-header mobile-header">
+          No mobile, brave knight. Desktop quests await thee!
+        </p>
+      </div>
+    </div>
+
+    <canvas id="canvas" class="hide"></canvas>
+    <div class="overview">
+      <div class="side-panel">
+        <div class="side-panel-container">
+          <div class="side-panel-header font-Kangmas">
+            Your score is
+            <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+            Higher↑
+          </div>
+
+          <div class="side-panel-details">
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div class="top-level-info w-full">
+                <div>
+                  <span class="font-Geist-Medium font-13 sub-top-level-info"
+                    >Ends in</span
+                  >
+
+                  <br />
+                  <span class="font-Geist-Medium font-18" id="ends-in"
+                    >24h 39m 34s</span
+                  >
+                </div>
+              </div>
+
+              <div id="leaderboard-id" class="leaderboard b-height w-full">
+                <div class="board-header">
+                  <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active font-Geist-Medium"
+                        id="global-tab"
+                        data-toggle="tab"
+                        href="#global"
+                        role="tab"
+                        aria-controls="global"
+                        aria-selected="true"
+                        >Global Leaderboard</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link font-Geist-Medium"
+                        id="team-tab"
+                        data-toggle="tab"
+                        href="#team"
+                        role="tab"
+                        aria-controls="team"
+                        aria-selected="false"
+                        >Team Leaderboard</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  id="leaderboard-body-header"
+                  class="board-table-header font-Geist-Regular font-12"
+                >
+                  <span>#</span>
+                  <span>Team</span>
+                  <span>Score</span>
+                </div>
+                <div class="board-header-bottom"></div>
+                <div
+                  id="leaderboard-body"
+                  class="font-Geist-Regular font-12 leaderboard-team-body"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div id="leaderboard-team-id" class="leaderboard-team w-full">
+                <div class="leaderboard-team-header">
+                  <span>Team Name</span>
+                  <span>Avg Score</span>
+                </div>
+                <div class="leaderboard-team-body">
+                  <div class="team-details-table">
+                    <div
+                      class="flex items-center justify-start"
+                      id="team-members-pfps"
+                    ></div>
+                    <span id="team-name" class="capitalize">Team --</span>
+                  </div>
+
+                  <span id="avg-score">--</span>
+                  <!-- <span id="team-name">Team --</span> -->
+                </div>
+              </div>
+
+              <button id="start-game">Play</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="loading">
+          <div class="main">
+            <div class="progress">
+              <div class="title font-wenxue">0%</div>
+              <div class="bar">
+                <div class="sub"><div class="percent"></div></div>
+              </div>
+              <div class="text">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <div class="landing hide">
+          <div class="action-1 flex-center">
+            <img src="./assets/main-index-title.png" class="title swing hook" />
+          </div>
+        </div>
+        <div class="wxShare hide">
+          <img src="./assets/main-share-icon.png" />
+        </div>
+      </div>
+
+      <button id="walletButton">
+        <span class="pfp-container">
+          <img src="" class="" alt="" id="pfpImage" />
+          <span id="walletAddress"></span>
+        </span>
+
+        <img src="assets/log-out.svg" alt="" class="log-out" />
+      </button>
+      <div id="walletConnectContainerModal" class="wallet-connect-container">
+        <div id="walletSelectionModal">
+          <div class="font-Kangmas font-30 text-white">Connect a Wallet</div>
+          <div class="wallet-container">
+            <div id="injectedWallets"></div>
+            <div class="walletOption" onclick="connectWithWalletConnect()">
+              <img
+                style="width: 24px; height: 24px; margin-right: 6px"
+                src="./assets/wallets/walletConnect.png"
+                alt="WalletConnect"
+              />
+              WalletConnect
+            </div>
+          </div>
+          <button class="closeButton" onclick="closeWalletSelectionModal()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- toast -->
+      <div
+        id="toast-success"
+        class="flex items-center z-[1000] text-center justify-center transition-all duration-300 w-[200px] p-[16px] text-[#018a08] bg-white rounded-lg text-[14px] font-bold shadow hidden absolute -top-[3000px] left-1/2 -translate-x-1/2"
+        role="alert"
+      >
+        <div class="ms-[12px] text-[14px] font-bold toast-text">
+          ✅ Loading...
+        </div>
+      </div>
+    </div>
+    <!-- contract abi -->
+    <script src="contractABI.js"></script>
+    <!-- fetching user fc details -->
+    <script src="fetchFCUser.js"></script>
+    <script src="checkNFT.js"></script>
+    <script src="fetchTeamLeaderboard.js"></script>
+    <script src="fetchLeaderboard.js"></script>
+    <script src="./dist/bundle.js"></script>
+    <script src="./assets/zepto-1.1.6.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- Web3Modal CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.0/dist/index.min.js"></script> -->
+    <!-- WalletConnect CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
+    <!-- Ethers.js CDN -->
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <!-- wagmi CDN -->
+    <script src="https://unpkg.com/@wagmi/core@0.3.0/dist/index.umd.js"></script>
+
+    <!-- <script>
+      const gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
+      const contractAddress = "0x9f089f3fc58770b591d075f82429ccb94fd67564";
+      var web3Modal;
+      var provider;
+      var ethersProvider;
+      var signer;
+      var selectedAccount = localStorage.getItem("selectedAccount");
+      var walletConnected = false,
+        isNFTPresent = false;
+
+      function formatNumber(num) {
+        if (num >= 1e9) {
+          return (num / 1e9).toFixed(1) + "b";
+        }
+        if (num >= 1e6) {
+          return (num / 1e6).toFixed(1) + "m";
+        }
+        if (num >= 1e3) {
+          return (num / 1e3).toFixed(1) + "k";
+        }
+        return num.toString();
+      }
+
+      var tokenId,
+        noOfParticipants = 0;
+
+      function getTokenId() {
+        return tokenId;
+      }
+    </script> -->
+    <script>
+      // creating supabase client
+      let teamParticipants = {
+        "154e6857-7ef1-4c2f-88cd-35c45237efad": "alpha",
+        "25e1fbb6-da8f-47ce-af9c-30f109b937e8": "beta",
+        "3d3b3381-344b-4c71-a517-e04e16273fe6": "gamma",
+        "063a315b-6613-48e1-aafe-1ddf0dfefe2c": "delta",
+        "9b2a7d8f-84a7-4acb-b636-759774794b20": "sigma",
+        "c6676970-99ee-4743-b407-c399ab8369ba": "omega",
+        "057142ce-cb64-450d-8d80-4d9da1a64ac8": "theta",
+        "f9256105-4212-4b35-af40-61f699479f17": "kappa",
+      };
+
+      var supabase;
+
+      function createSupabaseClient() {
+        const supabaseUrl = "https://upmkwrmqxnywczhpitxq.supabase.co";
+        const supabaseKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwbWt3cm1xeG55d2N6aHBpdHhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcyMjUzNjYsImV4cCI6MjAzMjgwMTM2Nn0.YfpqRfWwyV4EaJP3MToJsXPEYdY1yXYWLPSL0cNygQU";
+        supabase = supabase.createClient(supabaseUrl, supabaseKey);
+      }
+
+      createSupabaseClient();
+    </script>
+
+    <!-- leaderboard script -->
+    <script>
+      var activeTab = "#global-tab",
+        teamData = [];
+
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+
+      function updateLeaderboard(data) {
+        if (activeTab === "#team-tab") {
+          const leaderboardBodyHeader = document.querySelector(
+            "#leaderboard-body-header"
+          );
+          leaderboardBodyHeader.innerHTML = `
+           <span>#</span>
+           <span>Token Id</span>
+           <span>Score</span>
+          `;
+        }
+
+        const leaderboardBody = document.querySelector("#leaderboard-body");
+        const leaderboardModalBody = document.querySelector(
+          "#leaderboard-modal-body"
+        );
+
+        const leaderboardEntries = data
+          .map((entry, index) =>
+            activeTab !== "#team-tab"
+              ? `
+              <div class="board-entry">
+                <span>${index + 1}</span>
+                <span class="text-start capitalize">${entry.team}</span>
+                <span>${formatNumber(entry.score)}</span>
+              </div>
+            `
+              : entry.is_alive
+              ? `
+            <div class="board-entry-team">
+                <span>${index + 1}</span>
+                <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                  ${
+                    entry.pfp_url
+                      ? `
+                <img src="${entry.pfp_url}" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+                `
+                      : `
+                <div class='w-[20px] h-[20px] rounded-full !text-white max-w-[20px] max-h-[20px] bg-[#018A08] !font-bold text-[12px] flex items-center justify-center' >  
+                P
+                  </div>
+                `
+                  }   
+                   ${
+                     entry.fname
+                       ? `<a
+                         href="https://warpcast.com/${entry.fname}"
+                         target="_blank"
+                         class="board-username "
+                       >
+                         ${entry.username}
+                       </a>`
+                       : `
+                       <span
+                         class="board-username "
+                       >
+                         Player ${index + 1}
+                       </span>
+                       `
+                   }
+                </div>
+                <span>${formatNumber(entry.score)}</span>
+              </div>
+            `
+              : `
+          <div class="board-entry-team">
+              <span>${index + 1}</span>
+              <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                    <img src="${
+                      entry.pfp_url
+                    }" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+              ${
+                entry.username
+                  ? `<strike class="board-username ">${entry.username}</strike>`
+                  : `
+                      <span class="board-username" >
+                         Player ${index + 1}
+                       </span>`
+              }
+                    </div>
+              <span>💀💀</span>
+            </div>
+          `
+          )
+          .join("");
+
+        leaderboardBody.innerHTML = `
+
+              ${leaderboardEntries}
+            `;
+        leaderboardModalBody.innerHTML = `
+
+              ${leaderboardEntries}
+            `;
+        const playBtn = document.getElementById("start-game");
+        playBtn.disabled = false;
+        playBtn.style.cursor = "pointer";
+        playBtn.style.opacity = "1";
+      }
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const leaderboard = await fetchLeaderBoard();
+        updateLeaderboard(leaderboard);
+        await findCurrentTeamAndAvgScore();
+        const fc_user = await fetchFCUser([selectedAccount]);
+        if (fc_user[selectedAccount][0]) {
+          fcUserDetails = fc_user[selectedAccount][0];
+          const pfpImage = document.getElementById("pfpImage");
+          pfpImage.style.display = "block";
+          pfpImage.style.width = "24px";
+          pfpImage.style.height = "24px";
+          pfpImage.src = fcUserDetails.pfp_url;
+        }
+        const logOut = document.getElementsByClassName("log-out")[0];
+        if (logOut) {
+          logOut.style.display = "block";
+          logOut.addEventListener("click", disconnectWallet);
+        }
+      });
+
+      const updatePoints = async (newPoints) => {
+        try {
+          // Fetch the current points
+          let { data: currentData, error: fetchError } = await supabase
+            .from("points")
+            .select("*")
+            .eq("tokenid", tokenId)
+            .eq("game_id", gameId)
+            .single();
+
+          if (fetchError) {
+            if (!currentData) {
+              // If no existing points found, set currentPoints to 0
+              currentData = { points: 0, tokenid: tokenId, game_id: gameId };
+            } else {
+              throw fetchError;
+            }
+          }
+
+          // Add new points to the current points
+          currentData.points = (currentData?.points || 0) + newPoints;
+
+          // Update the points in the database
+          const { data, error } = await supabase
+            .from("points")
+            .upsert({
+              ...currentData,
+            })
+            .eq("tokenid", tokenId)
+            .eq("game_id", gameId)
+            .single();
+
+          if (error) throw error;
+        } catch (error) {
+          console.error("Error updating points:", error);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".nav-link");
+
+        if (tabs.length === 0) {
+          console.error("No tabs or tab contents found.");
+          return;
+        }
+
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            // Remove 'active' class from all tabs and 'show active' from all tab contents
+            tabs.forEach((item) => item.classList.remove("active"));
+
+            // Add 'active' class to the clicked tab
+            tab.classList.add("active");
+
+            // Get the target tab content and add 'show active' class
+            const targetId = tab.getAttribute("href");
+            activeTab = `${targetId}-tab`;
+            if (tab.href.includes("global")) {
+              const leaderboard = await fetchLeaderBoard();
+              updateLeaderboard(leaderboard);
+            } else {
+              // team leaderboard fetch and update
+              const teamLeaderboard = await fetchTeamLeaderboard();
+
+              updateLeaderboard(teamLeaderboard.teamData);
+            }
+          });
+        });
+
+        if (tokenId) {
+          findCurrentTeamAndAvgScore();
+        }
+      });
+    </script>
+    <script>
+      var domReady,
+        loadFinish,
+        canvasReady,
+        loadError,
+        gameStart,
+        game,
+        score,
+        successCount;
+
+      // init window height and width
+      var gameWidth = window.innerWidth;
+      var gameHeight = window.innerHeight;
+      var ratio = 1.5;
+      if (gameHeight / gameWidth < ratio) {
+        gameWidth = Math.ceil(gameHeight / ratio);
+      }
+      $(".content").css({ height: gameHeight + "px", width: gameWidth + "px" });
+      $(".js-modal-content").css({ width: gameWidth + "px" });
+
+      // loading animation
+      function hideLoading() {
+        if (domReady && canvasReady) {
+          $("#canvas").show();
+          loadFinish = true;
+          setTimeout(function () {
+            $(".loading").hide();
+            $(".landing").show();
+          }, 1000);
+        }
+      }
+
+      function updateLoading(status) {
+        var success = status.success;
+        var total = status.total;
+        var failed = status.failed;
+        if (failed > 0 && !loadError) {
+          loadError = true;
+          alert("Network error... Please try again.");
+          return;
+        }
+        var percent = parseInt((success / total) * 100);
+        if (percent === 100 && !canvasReady) {
+          canvasReady = true;
+          hideLoading();
+        }
+        percent = percent > 98 ? 98 : percent;
+        percent = percent + "%";
+        $(".loading .title").text(percent);
+        $(".loading .percent").css({
+          width: percent,
+        });
+      }
+
+      async function overShowOver() {
+        window.location.href = window.location.href.includes("?")
+          ? window.location.href.split("?")[0] + "?playagain=true"
+          : window.location.href + "?playagain=true";
+      }
+
+      let prevScore = 0;
+      // game customization options
+      const option = {
+        width: gameWidth,
+        height: gameHeight,
+        canvasId: "canvas",
+        soundOn: true,
+        setGameScore: function (s) {
+          score = s;
+          updatePoints(s - prevScore);
+          prevScore = s;
+          fetchLeaderBoard();
+        },
+        setGameSuccess: function (s) {
+          successCount = s;
+        },
+        setGameFailed: async function (f) {
+          $("#score").text(score);
+
+          if (f >= 3) {
+            const gameEnded = document.getElementById("play-again-modal");
+
+            if (gameEnded) {
+              gameEnded.style.display = "flex";
+              const scoreModal = document.getElementById("modal-score");
+              scoreModal.innerText = score;
+
+              const playAgainBtn = document.getElementById("playAgainBtn");
+              playAgainBtn.onclick = () => {
+                overShowOver();
+              };
+              const leaderboard = await fetchLeaderBoard();
+              await updateLeaderboard(leaderboard);
+              // find team data here
+              const teamData = await fetchTeamLeaderboard();
+              const team = teamData.team;
+              const avg_score = teamData.averageScore;
+              const modalTeamName = document.getElementById("team-modal-name");
+              const modalScore = document.getElementById("avg-modal-score");
+              modalTeamName.innerHTML = `Team ${team.clan} `;
+              modalScore.innerHTML = avg_score;
+              const pfpsContainer = document.getElementById(
+                "team-members-pfps-modal"
+              );
+              const pfpsData = await Pfps();
+              const pfpImages = pfpsData.pfps;
+              const remainingLength = pfpsData.remainingLength;
+
+              pfpsContainer.innerHTML = `
+              ${pfpImages.map((pfp) => {
+                return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+              })}
+                <div
+                class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                >
+                +${remainingLength}
+                </div>
+                `;
+            }
+          }
+        },
+      };
+
+      // game init with option
+      function gameReady() {
+        game = TowerGame(option);
+        game.load(function () {
+          game.init();
+          setTimeout(function () {
+            game.playBgm();
+          });
+        }, updateLoading);
+      }
+
+      var isWechat =
+        navigator.userAgent.toLowerCase().indexOf("micromessenger") !== -1;
+      if (isWechat) {
+        document.addEventListener("WeixinJSBridgeReady", gameReady, false);
+      } else {
+        gameReady();
+      }
+
+      function indexHide() {
+        $(".landing .action-1").addClass("slideTop");
+        $(".landing .action-2").addClass("slideBottom");
+        setTimeout(function () {
+          $(".landing").hide();
+        }, 950);
+      }
+
+      // click event
+
+      // listener
+      window.addEventListener(
+        "load",
+        function () {
+          domReady = true;
+          hideLoading();
+        },
+        false
+      );
+    </script>
+
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-YCWZ8ZDCH2"
+    ></script>
+    <script>
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      (window.dataLayer = window.dataLayer || []),
+        gtag("js", new Date()),
+        gtag("config", "G-YCWZ8ZDCH2");
+    </script>
+    <!-- <script>
+      const startGame = () => {
+        if (gameStart) return;
+        if (!walletConnected) {
+          nftModalButton.onclick = (e) => {
+            e.preventDefault();
+          };
+
+          const walletConnectModalContainer =
+            document.getElementById("walletConnectModal");
+          const walletConnectModal = document.getElementById("walletModal");
+
+          if (walletConnectModalContainer) {
+            walletConnectModalContainer.style.display = "flex";
+            // note: want to close modal when clicked
+            walletConnectModalContainer.onclick = () => {
+              walletConnectModalContainer.style.display = "none";
+            };
+            walletConnectModal.onclick = (e) => {
+              e.preventDefault();
+            };
+          }
+
+          return;
+        }
+        console.log("is nft present: ", isNFTPresent);
+        if (!isNFTPresent) {
+          const nftModal = document.getElementById("nftNotFoundContainer");
+
+          if (nftModal) {
+            nftModal.style.display = "flex";
+            nftModal.onclick = () => {
+              nftModal.style.display = "none";
+            };
+
+            notFoundModal.onclick = (e) => {
+              e.preventDefault();
+            };
+          }
+
+          return;
+        }
+
+        gameStart = true;
+        setTimeout(function () {
+          game.playBgm();
+        });
+        indexHide();
+        setTimeout(game.start, 400);
+      };
+    </script> -->
+    <script>
+      // async function reconnectToProvider(type, name) {
+      //   if (type === "walletconnect") {
+      //     return await web3Modal.connectTo("walletconnect");
+      //   }
+
+      //   if (type === "injected") {
+      //     setTimeout(()=>{
+      //       console.log(window.ethereum.providers);
+      //     },1000)
+
+      //     const provider = window?.ethereum?.providers?.find((provider) => {
+      //       if (provider[name]) {
+      //         return provider;
+      //       }
+      //     });
+      //     window?.ethereum?.setSelectedProvider(provider);
+      //     await provider.request({ method: "eth_requestAccounts" });
+      //     return provider;
+      //   }
+      // }
+
+      async function reconnectToProvider(type, name) {
+        if (type === "walletconnect") {
+          return await web3Modal.connectTo("walletconnect");
+        }
+        if (type === "injected") {
+          if (!window.ethereum) {
+            throw new Error(
+              "No Ethereum provider found. Please install a wallet extension."
+            );
+          }
+
+          if (!window.ethereum.providers) {
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            return window.ethereum;
+          }
+
+          const provider = window.ethereum.providers.find(
+            (provider) => provider[name]
+          );
+          if (!provider) {
+            throw new Error(`Provider ${name} not found`);
+          }
+
+          window.ethereum.setSelectedProvider(provider);
+          await provider.request({ method: "eth_requestAccounts" });
+          return provider;
+        }
+
+        throw new Error(`Unsupported provider type: ${type}`);
+      }
+
+      async function init() {
+        const providerOptions = {
+          walletconnect: {
+            package: window.WalletConnectProvider.default,
+            options: {
+              infuraId: "45ad1c9edf074a5db79d09b6d721a7bf",
+            },
+          },
+        };
+
+        web3Modal = new window.Web3Modal.default({
+          cacheProvider: true,
+          providerOptions,
+        });
+
+        document
+          .getElementById("walletButton")
+          .addEventListener("click", onButtonClick);
+
+        checkInjectedWallets();
+        const savedAccount = localStorage.getItem("selectedAccount");
+        const savedProviderType = localStorage.getItem("providerType");
+        const savedName = localStorage.getItem("injectedName");
+
+        if (savedAccount) {
+          selectedAccount = savedAccount;
+        }
+
+        if (savedAccount && savedProviderType && savedName) {
+          provider = await reconnectToProvider(savedProviderType, savedName);
+          ethersProvider = new window.ethers.providers.Web3Provider(provider);
+          signer = ethersProvider.getSigner();
+
+          selectedAccount = savedAccount;
+
+          console.log("selected", selectedAccount);
+
+          if (selectedAccount) {
+            updateButton();
+            const response = await checkNFT(selectedAccount);
+            console.log("isNFT", response);
+
+            if (response.tokenId) {
+              isNFTPresent = true;
+              tokenId = response.tokenId;
+            } else {
+              if (response.message.includes("dead")) {
+                isNFTPresent = true;
+                isPlayerDead = true;
+              } else {
+                isNFTPresent = false;
+              }
+            }
+
+            walletConnected = true;
+          }
+
+          if (isNFTPresent) {
+            await findCurrentTeamAndAvgScore();
+          }
+        }
+      }
+
+      function checkInjectedWallets() {
+        const injectedWalletsDiv = document.getElementById("injectedWallets");
+
+        function createWalletOption(key, logoUrl, provider, name) {
+          const walletOption = document.createElement("div");
+          // walletOption.className = "walletOption";
+          walletOption.innerHTML = `<div class="walletOption"><img style="width:24px; height: 24px; margin-right: 6px;" src="${logoUrl}" alt="${name}"/> ${name}</div>`;
+          walletOption.onclick = () => {
+            selectInjectedWallet(key, provider);
+          };
+
+          injectedWalletsDiv.appendChild(walletOption);
+        }
+
+        const walletLogos = {
+          MetaMask: "./assets/wallets/metamask.png",
+          "Coinbase Wallet":
+            "https://avatars.githubusercontent.com/u/18060234?s=200&v=4",
+          "Trust Wallet":
+            "https://trustwallet.com/assets/images/media/assets/TWT.png",
+          Frame: "https://frame.sh/images/frame_logo.png",
+          "Brave Wallet":
+            "https://brave.com/static-assets/images/brave-logo.svg",
+        };
+        if (window.ethereum) {
+          const walletNames = {
+            isMetaMask: "MetaMask",
+            isCoinbaseWallet: "Coinbase Wallet",
+            isTrust: "Trust Wallet",
+            isFrame: "Frame",
+            isBraveWallet: "Brave Wallet",
+          };
+
+          if (window.ethereum.providers) {
+            window.ethereum.providers.forEach((provider) => {
+              for (const [key, name] of Object.entries(walletNames)) {
+                if (provider[key]) {
+                  createWalletOption(key, walletLogos[name], provider, name);
+                }
+              }
+            });
+          } else {
+            for (const [key, name] of Object.entries(walletNames)) {
+              if (window.ethereum[key]) {
+                createWalletOption(
+                  key,
+                  walletLogos[name],
+                  window.ethereum,
+                  name
+                );
+              }
+            }
+          }
+        } else {
+          console.log("No injected wallets found");
+        }
+      }
+
+      async function onButtonClick() {
+        const nftModal = document.getElementById("nftNotFoundContainer");
+        if (nftModal) {
+          nftModal.style.display = "none";
+        }
+
+        if (!provider || !selectedAccount) {
+          toggleWalletSelectionModal(true);
+        } else {
+          toggleWalletSelectionModal(false);
+          console.log("selectedAccount inside", selectedAccount);
+
+          const walletBtn = document.getElementById("walletAddress");
+          walletBtn.innerText =
+            selectedAccount.slice(0, 5) + "..." + selectedAccount.slice(-4);
+          const textContainer =
+            document.getElementsByClassName("side-panel-header");
+          const playButtonElement = document.getElementById("start-game");
+          const score = document.getElementById("top-score");
+          if (textContainer && playButtonElement && score.innerText === "0") {
+            textContainer[0].innerHTML = `
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
+
+            playButtonElement.textContent = "Play game";
+          }
+        }
+      }
+      console.log("tokenID", tokenId);
+
+      function toggleWalletSelectionModal(show) {
+        const modal = document.getElementById("walletSelectionModal");
+        const modalContainer = document.getElementById(
+          "walletConnectContainerModal"
+        );
+        if (show) {
+          modalContainer.style.display = "flex";
+          setTimeout(() => {
+            modal.style.top = "50%";
+          }, 200);
+          modalContainer.onclick = () => {
+            modal.style.top = "250%";
+            setTimeout(() => {
+              modalContainer.style.display = "none";
+            }, 200);
+          };
+          modal.onclick = (e) => {
+            e.preventDefault();
+          };
+        } else {
+          modal.style.top = "250%";
+          setTimeout(() => {
+            modalContainer.style.display = "none";
+          }, 200);
+        }
+      }
+
+      function closeWalletSelectionModal() {
+        toggleWalletSelectionModal(false);
+      }
+
+      async function selectInjectedWallet(key, selectedProvider) {
+        try {
+          provider = selectedProvider;
+          if (window.ethereum.providers) {
+            window.ethereum.setSelectedProvider(selectedProvider);
+          }
+          if (selectedProvider.isMetaMask) {
+            await selectedProvider.send("wallet_requestPermissions", [
+              { eth_accounts: {} },
+            ]);
+          } else {
+            await selectedProvider.request({ method: "eth_requestAccounts" });
+          }
+          await connectWallet(key, selectedProvider, "injected");
+          if (selectedAccount) {
+            const fc_user = await fetchFCUser([selectedAccount]);
+            if (fc_user[selectedAccount][0]) {
+              fcUserDetails = fc_user[selectedAccount][0];
+              console.log("fc obj", fcUserDetails);
+              const pfpImage = document.getElementById("pfpImage");
+              pfpImage.style.display = "block";
+              pfpImage.style.width = "24px";
+              pfpImage.style.height = "24px";
+              pfpImage.src = fcUserDetails.pfp_url;
+            }
+            const logOut = document.getElementsByClassName("log-out")[0];
+            if (logOut) {
+              logOut.style.display = "block";
+              logOut.addEventListener("click", disconnectWallet);
+            }
+            const teamTab = document.getElementById("team-tab");
+            teamTab.style.display = "block";
+            if (tokenId) {
+              findCurrentTeamAndAvgScore();
+            }
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
+          }
+        } catch (e) {
+          console.log("Could not connect to the selected wallet", e);
+        }
+      }
+
+      async function connectWithWalletConnect() {
+        try {
+          provider = await web3Modal.connectTo("walletconnect");
+          await connectWallet("WalletConnect", provider, "walletConnect");
+        } catch (e) {
+          console.log("Could not connect to WalletConnect", e);
+        }
+      }
+
+      async function connectWallet(key, selectedProvider, providerType) {
+        try {
+          ethersProvider = new window.ethers.providers.Web3Provider(
+            selectedProvider || provider
+          );
+          signer = ethersProvider.getSigner();
+
+          const accounts = await ethersProvider.send("eth_requestAccounts", []);
+          selectedAccount = accounts[0];
+
+          updateButton();
+          localStorage.setItem("selectedAccount", selectedAccount);
+          localStorage.setItem("providerType", providerType);
+          localStorage.setItem("injectedName", key);
+
+          walletConnected = true;
+
+          const fc_user = await fetchFCUser([accounts[0]]);
+          if (fc_user[selectedAccount][0]) {
+            fcUserDetails = fc_user[selectedAccount][0];
+            console.log("fc obj", fcUserDetails);
+            const pfpImage = document.getElementById("pfpImage");
+            pfpImage.style.display = "block";
+            pfpImage.style.width = "24px";
+            pfpImage.style.height = "24px";
+            pfpImage.src = fcUserDetails.pfp_url;
+          }
+          const logOut = document.getElementsByClassName("log-out")[0];
+          if (logOut) {
+            logOut.style.display = "block";
+            logOut.addEventListener("click", disconnectWallet);
+          }
+          const teamTab = document.getElementById("team-tab");
+          teamTab.style.display = "block";
+          const leaderboardTeam = document.getElementById(
+            "leaderboard-team-id"
+          );
+          leaderboardTeam.classList.remove("hide");
+          const leaderboardTeamBody =
+            document.getElementById("leaderboard-body");
+          leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+          leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
+          const textContainer =
+            document.getElementsByClassName("side-panel-header");
+          const playButtonElement = document.getElementById("start-game");
+
+          if (textContainer && playButtonElement) {
+            textContainer[0].innerHTML = `
+              Your score is
+              <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
+              Higher↑          `;
+
+            playButtonElement.textContent = "Play game";
+          }
+
+          selectedProvider.on("accountsChanged", (accounts) => {
+            selectedAccount = accounts[0];
+            updateButton();
+          });
+
+          selectedProvider.on("chainChanged", (chainId) => {
+            console.log("Chain changed:", chainId);
+          });
+
+          selectedProvider.on("disconnect", (error) => {
+            console.log("Disconnected:", error);
+
+            // disconnecting wallet
+            const textContainer =
+              document.getElementsByClassName("side-panel-header");
+            const playButtonElement = document.getElementById("start-game");
+            const walletBtnText = document.getElementById("walletAddress");
+            walletBtnText.innerText = "Connect Wallet";
+            const pfp = document.getElementById("pfpImage");
+            pfp.style.display = "none";
+            const logout = document.getElementsByClassName("log-out");
+            logout.style.display = "none";
+            if (!walletConnected && textContainer && playButtonElement) {
+              textContainer[0].innerHTML = `
+            Get as <br />
+            Higher↑ <br />
+            as you can!
+            `;
+
+              playButtonElement.textContent = "Connect Wallet to play";
+            }
+            resetButton();
+            const leaderboardTeam = document.getElementById(
+              "leaderboard-team-id"
+            );
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeam.classList.add("hide");
+            leaderboardTeamBody.style.height = "calc(100vh - 550px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 550px)";
+          });
+          const response = await checkNFT(selectedAccount);
+          console.log("isNFT", response);
+
+          if (response.tokenId) {
+            isNFTPresent = true;
+            tokenId = response.tokenId;
+          } else {
+            if (response.message.includes("dead")) {
+              isNFTPresent = true;
+              isPlayerDead = true;
+            } else {
+              isNFTPresent = false;
+            }
+          }
+
+          if (isNFTPresent) {
+            const leaderboard = await fetchLeaderBoard();
+            updateLeaderboard(leaderboard);
+            console.log("leaderboard data: ", leaderboard);
+          }
+        } catch (e) {
+          console.log("Could not get a wallet connection", e);
+        }
+      }
+
+      function updateButton() {
+        if (selectedAccount) {
+          document.getElementById(
+            "walletAddress"
+          ).innerText = `${selectedAccount.substring(
+            0,
+            6
+          )}...${selectedAccount.substring(selectedAccount.length - 4)}`;
+          toggleWalletSelectionModal(false);
+        } else {
+          resetButton();
+        }
+      }
+
+      function resetButton() {
+        document.getElementById("walletAddress").innerText = "Connect Wallet";
+        provider = null;
+        selectedAccount = null;
+        localStorage.removeItem("selectedAccount");
+        localStorage.removeItem("providerType");
+        localStorage.removeItem("injectedName");
+      }
+
+      // async function checkNFT(address) {
+      //   const contract = new ethers.Contract(
+      //     contractAddress,
+      //     contractABI,
+      //     signer
+      //   );
+
+      //   try {
+      //     const balance = await contract.balanceOf(address);
+      //     console.log("balance", balance);
+
+      //     const nftStatus = `Balance of NFTs for address ${address}: ${balance.toString()}`;
+      //     console.log("balance status", nftStatus);
+
+      //     if (balance.gt(0)) {
+      //       tokenId = (
+      //         await contract.tokenOfOwnerByIndex(address, 0)
+      //       ).toString();
+
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   } catch (error) {
+      //     console.error("Error checking NFT presence:", error);
+      //     return false;
+      //   }
+      // }
+
+      async function disconnectWallet() {
+        if (provider && provider.disconnect) {
+          try {
+            await provider.disconnect();
+          } catch (error) {
+            console.log("Error disconnecting wallet:", error);
+          }
+        }
+
+        resetButton();
+
+        const pfpImage = document.getElementById("pfpImage");
+        const logOut = document.getElementsByClassName("log-out")[0];
+        if (pfpImage) pfpImage.style.display = "none";
+        if (logOut) logOut.style.display = "none";
+
+        fcUserDetails = null;
+        walletConnected = false;
+        selectedAccount = null;
+        provider = null;
+        localStorage.removeItem("selectedAccount");
+        const textContainer =
+          document.getElementsByClassName("side-panel-header")[0];
+        const playButtonElement = document.getElementById("start-game");
+
+        if (textContainer && playButtonElement) {
+          textContainer.innerHTML = `
+        Get as <br />
+        Higher↑ <br />
+        as you can!
+      `;
+          playButtonElement.textContent = "Connect Wallet to play";
+        }
+
+        console.log("Wallet disconnected successfully");
+        overShowOver();
+      }
+
+      async function changeWallet() {
+        if (provider && provider.accountsChanged) {
+          try {
+            await provider.accountsChanged();
+          } catch (error) {
+            console.log("Error disconnecting wallet:", error);
+          }
+        }
+      }
+
+      async function Pfps() {
+        const teamData = await fetchTeamLeaderboard();
+        const teamMembers = teamData.teamData;
+        const pfps = teamMembers.filter((member) => member.pfp_url) ?? [];
+        const slicedPfps = pfps.slice(0, 3) ?? [];
+        const remainingLength = pfps.length - 3 ?? 0;
+
+        return {
+          pfps: slicedPfps,
+          remainingLength,
+        };
+      }
+      async function findCurrentTeamAndAvgScore() {
+        const teamData = await fetchTeamLeaderboard();
+        console.log(teamData);
+        const team = teamData.team;
+        const teamMembers = teamData.teamData;
+        const avg_score = teamData.averageScore;
+        console.log(teamData);
+        document.getElementById("top-score").innerHTML =
+          teamData.yourScore ?? 0;
+        document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
+        document.getElementById("avg-score").innerHTML = avg_score.toFixed(2);
+        const modalTeamName = document.getElementById("team-modal-name");
+        const modalScore = document.getElementById("avg-modal-score");
+        if (modalScore && modalTeamName) {
+          modalTeamName.innerHTML = `Team ${team.clan}`;
+          modalScore.innerHTML = avg_score.toFixed(2);
+        }
+        const pfpsContainer = document.getElementById("team-members-pfps");
+        const pfpsData = await Pfps();
+        const pfpImages = pfpsData.pfps;
+        console.log(pfpImages);
+        const remainingLength = pfpsData.remainingLength;
+
+        pfpsContainer.innerHTML = `
+        ${pfpImages.map((pfp) => {
+          return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+        })}
+                      <div
+                        class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                      >
+                        +${remainingLength}
+                      </div>
+        `;
+      }
+
+      // window.addEventListener("load", async () => {
+      //   await init();
+      // });
+      window.addEventListener("DOMContentLoaded", async () => {
+        await init();
+      });
+    </script>
+    <!-- main dom load script adding onclick events -->
+    <script src="main.js"></script>
+  </body>
+</html>
