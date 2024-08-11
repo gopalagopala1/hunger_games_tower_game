@@ -388,86 +388,6 @@
       function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
       }
-      //supabase related queries
-      // async function fetchLeaderBoard() {
-      //   try {
-      //     let { data, error } = await supabase
-      //       .from("points")
-      //       .select("*")
-      //       .eq("game_id", gameId)
-      //       .order("points", { ascending: false });
-
-      //     console.log("data", data);
-
-      //     let teamTokenIds = await supabase
-      //       .from("teamparticipants")
-      //       .select("*");
-      //     console.log("data id", teamTokenIds);
-
-      //     let groupedByTeamId = teamTokenIds?.data.reduce(
-      //       (acc, participant) => {
-      //         const { team_id } = participant;
-      //         if (!acc[team_id]) {
-      //           acc[team_id] = [];
-      //         }
-      //         acc[team_id].push(participant);
-      //         return acc;
-      //       },
-      //       {}
-      //     );
-
-      //     let teamAverageScores = Object.entries(groupedByTeamId).map(
-      //       ([teamId, participants]) => {
-      //         let totalPoints = participants.reduce((acc, participant) => {
-      //           const points = data.find(
-      //             (d) => d.tokenid === participant.tokenid
-      //           )?.points;
-
-      //           const number = parseInt(points ?? "0");
-
-      //           acc = acc + number;
-      //           console.log("acc: ", acc);
-      //           return acc;
-      //         }, 0);
-      //         let averageScore = totalPoints / participants.length;
-      //         return { teamId, averageScore };
-      //       }
-      //     );
-
-      //     if (activeTab === "#global-tab") {
-      //       data = teamAverageScores
-      //         ?.sort((a, b) => b.averageScore - a.averageScore)
-      //         ?.map((v) => {
-      //           return {
-      //             tokenid: `Team ${capitalizeFirstLetter(
-      //               teamParticipants[v.teamId]
-      //             )}`,
-      //             points: v.averageScore,
-      //           };
-      //         });
-      //     }
-
-      //     if (activeTab === "#team-tab") {
-      //       teamData?.sort((a, b) => b.points - a.points);
-
-      //       data = teamData;
-      //     }
-
-      //     if (error) throw error;
-      //     updateLeaderboard(data);
-      //     noOfParticipants = data?.length ?? 1;
-
-      //     document.getElementById(
-      //       "part-count"
-      //     ).innerHTML = `${noOfParticipants}/200`;
-
-      //     if (tokenId) {
-      //       findCurrentTeamAndAvgScore(tokenId);
-      //     }
-      //   } catch (error) {
-      //     console.error("Error fetching leaderboard data:", error);
-      //   }
-      // }
 
       function updateLeaderboard(data) {
         if (activeTab === "#team-tab") {
@@ -599,166 +519,6 @@
         }
       };
 
-      const insertData = async (tokenId, gameId) => {
-        try {
-          const response = await supabase
-            .from("points")
-            .select("*")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (!response.data) {
-            const { data, error } = await supabase
-              .from("points")
-              .insert([{ tokenid: tokenId, points: 0, game_id: gameId }])
-              .single();
-          }
-        } catch (error) {
-          console.error("Error inserting token ID:", error);
-        }
-      };
-
-      const findTeamByTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("team_id")
-            .eq("tokenid", tokenId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team found for tokenId ${tokenId}`);
-            return null;
-          }
-
-          const teamId = data.team_id;
-          const { data: teamData, error: teamError } = await supabase
-            .from("teams")
-            .select("*")
-            .eq("id", teamId)
-            .single();
-
-          if (teamError) throw teamError;
-
-          if (!teamData) {
-            console.error(`No team data found for teamId ${teamId}`);
-            return null;
-          }
-
-          return teamData;
-        } catch (error) {
-          console.error("Error finding team by tokenId:", error);
-          return null;
-        }
-      };
-
-      const getTokenIdsInTeam = async (teamId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("tokenid")
-            .eq("team_id", teamId);
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team participants found for teamId ${teamId}`);
-            return [];
-          }
-
-          return data.map((participant) => participant.tokenid);
-        } catch (error) {
-          console.error("Error getting token IDs in team:", error);
-          return [];
-        }
-      };
-
-      const getScoreForTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("points")
-            .select("points")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(
-              `No score found for tokenId ${tokenId} and gameId ${gameId}`
-            );
-            return 0;
-          }
-
-          return data.points;
-        } catch (error) {
-          console.error("Error getting score for tokenId:", error);
-          return 0;
-        }
-      };
-
-      function addUniqueEntry(teamData, newEntry) {
-        const map = new Map(teamData.map((item) => [item.tokenid, item]));
-        map.set(newEntry.tokenid, newEntry);
-        return Array.from(map.values());
-      }
-
-      const findCurrentTeamAndAvgScore = async (tokenId) => {
-        try {
-          // Assuming there's a function to find the current team of a tokenId
-          const team = await findTeamByTokenId(tokenId);
-          // Assuming there's a function to get all token ids in a team
-          const teamTokenIds = await getTokenIdsInTeam(team.id);
-
-          // Assuming there's a function to get the score for a tokenId
-          let totalScore = 0;
-          for (const id of teamTokenIds) {
-            const score = await getScoreForTokenId(id);
-            totalScore += score;
-
-            teamData = addUniqueEntry(teamData, { tokenid: id, points: score });
-
-            if (id === tokenId) {
-              document.getElementById("top-score").innerHTML =
-                formatNumber(score);
-            }
-          }
-          const avgScore = totalScore / teamTokenIds.length;
-
-          const leaderboardTeam = document.getElementById(
-            "leaderboard-team-id"
-          );
-          leaderboardTeam.classList.remove("hide");
-
-          const leaderboard = document.getElementById("leaderboard-id");
-          leaderboard.classList.remove("b-height");
-          leaderboard.classList.add("a-height");
-
-          document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
-          document.getElementById("avg-score").innerHTML = avgScore.toFixed(2);
-          const modalTeamName = document.getElementById("team-modal-name");
-          const modalScore = document.getElementById("avg-modal-score");
-          if (modalScore && modalTeamName) {
-            modalTeamName.innerHTML = `Team ${team.clan}`;
-            modalScore.innerHTML = avgScore.toFixed(2);
-          }
-
-          return {
-            teamName: team.clan,
-            avgScore,
-          };
-        } catch (error) {
-          console.error(
-            "Error finding team or calculating average score:",
-            error
-          );
-        }
-      };
-
       document.addEventListener("DOMContentLoaded", function () {
         const tabs = document.querySelectorAll(".nav-link");
 
@@ -809,14 +569,14 @@
 
               const teamLeaderboard = await fetchTeamLeaderboard();
               console.log(teamLeaderboard);
-              
+
               updateLeaderboard(teamMembers);
             }
           });
         });
 
         if (tokenId) {
-          findCurrentTeamAndAvgScore(tokenId);
+          // findCurrentTeamAndAvgScore(tokenId);
         }
       });
     </script>
@@ -911,7 +671,9 @@
               playAgainBtn.onclick = () => {
                 overShowOver();
               };
-              const modalShowData = await findCurrentTeamAndAvgScore();
+
+              // find team data here
+              const modalShowData = {};
               const modalTeamName = document.getElementById("team-modal-name");
               const modalScore = document.getElementById("avg-modal-score");
 
@@ -1138,7 +900,7 @@
           }
 
           if (isNFTPresent) {
-            await findCurrentTeamAndAvgScore(tokenId);
+            // await findCurrentTeamAndAvgScore(tokenId);
           }
         }
       }
@@ -1296,7 +1058,7 @@
             const teamTab = document.getElementById("team-tab");
             teamTab.style.display = "block";
             if (tokenId) {
-              findCurrentTeamAndAvgScore(tokenId);
+              // findCurrentTeamAndAvgScore(tokenId);
             }
             const leaderboardTeamBody =
               document.getElementById("leaderboard-body");
