@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider npm run build && node index.js",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js --mode production",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build && node index.js",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js --mode production",
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack serve --config webpack.config.js --mode development"
   },
   "repository": {

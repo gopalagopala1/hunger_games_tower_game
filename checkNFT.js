@@ -3,7 +3,7 @@ const checkNFT = async (address) => {
     const addresses =
       Array.isArray(address) && address.length > 1 ? address : [address];
 
-    const url = `http://localhost:3000/api/checkNFT`;
+    const url = `https://tower-game-backend.vercel.app/api/checkNFT`;
     const options = {
       method: "POST",
       headers: {

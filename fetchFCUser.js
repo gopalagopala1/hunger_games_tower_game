@@ -5,7 +5,7 @@ const fetchFCUser = async (address) => {
         ? address.join("%2")
         : address;
 
-    const url = `http://localhost:3000/api/getFCuser?address=${addressParam}`;
+    const url = `https://tower-game-backend.vercel.app/api/getFCuser?address=${addressParam}`;
     const options = {
       method: "GET",
       headers: {
