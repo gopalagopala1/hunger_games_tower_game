@@ -41,28 +41,13 @@
                   class="team-logo"
                   alt="Team Kappa Logo"
                 /> -->
-                <div class="flex items-center justify-start">
-                  <div
-                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
-                  >
-                    P
-                  </div>
-                  <div
-                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
-                  >
-                    P
-                  </div>
-                  <div
-                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
-                  >
-                    P
-                  </div>
-
-                </div>
-
-                <span class="team-modal-name">Team --</span>
+                <div
+                  class="flex items-center justify-start"
+                  id="team-members-pfps-modal"
+                ></div>
+                <span id="team-modal-name">Team --</span>
               </div>
-              <div class="avg-modal-score">23564</div>
+              <div id="avg-modal-score" class="capitalize">0</div>
             </div>
           </article>
 
@@ -71,7 +56,7 @@
             <div class="global-leaderboard-separator"></div>
             <div
               id="leaderboard-body-header"
-              class="board-table-header font-Geist-Regular font-12"
+              class="board-table-header modal-header-flex !pt-[16px] !pb-[12px] font-Geist-Regular font-12"
             >
               <span>#</span>
               <span>Team</span>
@@ -243,12 +228,10 @@
                 </div>
                 <div class="leaderboard-team-body">
                   <div class="team-details-table">
-                    <img
-                      loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/a03ce52e33897c0985770c7c2dd604c63df5a421bcef88ae906f02ca32a8df10?apiKey=0e14ce67bb76481cb40ff58c7f753be2&&apiKey=0e14ce67bb76481cb40ff58c7f753be2"
-                      class="team-logo"
-                      alt="Team Kappa Logo"
-                    />
+                    <div
+                      class="flex items-center justify-start"
+                      id="team-members-pfps"
+                    ></div>
                     <span id="team-name" class="capitalize">Team --</span>
                   </div>
 
@@ -315,7 +298,7 @@
       <!-- toast -->
       <div
         id="toast-success"
-        class="flex items-center text-center justify-center transition-all duration-300 w-[200px] p-[16px] text-[#018a08] bg-white rounded-lg text-[14px] font-bold shadow hidden absolute -top-[3000px] left-1/2 -translate-x-1/2"
+        class="flex items-center z-[1000] text-center justify-center transition-all duration-300 w-[200px] p-[16px] text-[#018a08] bg-white rounded-lg text-[14px] font-bold shadow hidden absolute -top-[3000px] left-1/2 -translate-x-1/2"
         role="alert"
       >
         <div class="ms-[12px] text-[14px] font-bold toast-text">
@@ -446,7 +429,7 @@
                 <img src="${entry.pfp_url}" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
                 `
                       : `
-                <div class='w-[20px] h-[20px] rounded-full text-white max-w-[20px] max-h-[20px] bg-[#018A08] text-white font-bold text-[12px] flex items-center justify-center' >  
+                <div class='w-[20px] h-[20px] rounded-full !text-white max-w-[20px] max-h-[20px] bg-[#018A08] !font-bold text-[12px] flex items-center justify-center' >  
                 P
                   </div>
                 `
@@ -695,19 +678,33 @@
               playAgainBtn.onclick = () => {
                 overShowOver();
               };
-
+              const leaderboard = await fetchLeaderBoard();
+              await updateLeaderboard(leaderboard);
               // find team data here
-              const teamData = findCurrentTeamAndAvgScore();
+              const teamData = await fetchTeamLeaderboard();
               const team = teamData.team;
               const avg_score = teamData.averageScore;
-
               const modalTeamName = document.getElementById("team-modal-name");
               const modalScore = document.getElementById("avg-modal-score");
+              modalTeamName.innerHTML = `Team ${team.clan} `;
+              modalScore.innerHTML = avg_score;
+              const pfpsContainer = document.getElementById(
+                "team-members-pfps-modal"
+              );
+              const pfpsData = await Pfps();
+              const pfpImages = pfpsData.pfps;
+              const remainingLength = pfpsData.remainingLength;
 
-              if (modalTeamName && modalScore) {
-                modalTeamName.innerHTML = team.clan;
-                modalScore.innerHTML = score + avg_score;
-              }
+              pfpsContainer.innerHTML = `
+              ${pfpImages.map((pfp) => {
+                return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+              })}
+                <div
+                class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                >
+                +${remainingLength}
+                </div>
+                `;
             }
           }
         },
@@ -1346,7 +1343,8 @@
         const teamMembers = teamData.teamData;
         const avg_score = teamData.averageScore;
         console.log(teamData);
-        document.getElementById("top-score").innerHTML = teamData.yourScore ?? 0;
+        document.getElementById("top-score").innerHTML =
+          teamData.yourScore ?? 0;
         document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
         document.getElementById("avg-score").innerHTML = avg_score.toFixed(2);
         const modalTeamName = document.getElementById("team-modal-name");
@@ -1355,6 +1353,22 @@
           modalTeamName.innerHTML = `Team ${team.clan}`;
           modalScore.innerHTML = avg_score.toFixed(2);
         }
+        const pfpsContainer = document.getElementById("team-members-pfps");
+        const pfpsData = await Pfps();
+        const pfpImages = pfpsData.pfps;
+        console.log(pfpImages);
+        const remainingLength = pfpsData.remainingLength;
+
+        pfpsContainer.innerHTML = `
+        ${pfpImages.map((pfp) => {
+          return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+        })}
+                      <div
+                        class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                      >
+                        +${remainingLength}
+                      </div>
+        `;
       }
 
       // window.addEventListener("load", async () => {

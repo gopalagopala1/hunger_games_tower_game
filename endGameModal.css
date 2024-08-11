@@ -50,6 +50,12 @@
   justify-content: start;
   padding: 16px 16px;
 }
+.modal-header-flex span:nth-child(2) {
+  flex: 010;
+  text-align: start;
+  padding: 0px 20px;
+}
+
 .leaderboard-header-content,
 .global-leaderboard-header-content {
   display: flex;
@@ -264,4 +270,3 @@
   color: rgba(1, 138, 8, 1);
   font: 500 16px/1.2 "Geist-Medium";
 }
-

@@ -101,6 +101,10 @@ const startGame = () => {
     return;
   }
 
+  const globalTab = document.getElementById("global-tab");
+  if (!globalTab.classList.contains("active")) {
+    globalTab?.click();
+  }
   gameStart = true;
   setTimeout(function () {
     game.playBgm();
@@ -163,7 +167,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     walletBtn.onclick = () => {
       toggleWalletSelectionModal(true);
     };
-
     const leaderboardTeam = document.getElementById("leaderboard-team-id");
     const leaderboardTeamBody = document.getElementById("leaderboard-body");
     leaderboardTeam.classList.add("hide");
@@ -171,14 +174,5 @@ document.addEventListener("DOMContentLoaded", async function () {
     leaderboardTeamBody.style.maxHeight = "calc(100vh - 550px)";
     const teamTab = document.getElementById("team-tab");
     teamTab.style.display = "none";
-  }
-
-  if (window.location.href.includes("playagain")) {
-    setTimeout(() => {
-      indexHide();
-      startGame();
-      const actionImg = document.getElementsByClassName("landing")[0];
-      actionImg.style.display = "none";
-    }, 200);
   }
 });
