@@ -35,12 +35,31 @@
             </div>
             <div class="team-summary">
               <div class="team-details-table">
-                <img
+                <!-- <img
                   loading="lazy"
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/a03ce52e33897c0985770c7c2dd604c63df5a421bcef88ae906f02ca32a8df10?apiKey=0e14ce67bb76481cb40ff58c7f753be2&&apiKey=0e14ce67bb76481cb40ff58c7f753be2"
                   class="team-logo"
                   alt="Team Kappa Logo"
-                />
+                /> -->
+                <div class="flex items-center justify-start">
+                  <div
+                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
+                  >
+                    P
+                  </div>
+                  <div
+                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
+                  >
+                    P
+                  </div>
+                  <div
+                    class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] bg-[#018A08] text-white font-bold text-[14px] flex items-center justify-center"
+                  >
+                    P
+                  </div>
+
+                </div>
+
                 <span class="team-modal-name">Team --</span>
               </div>
               <div class="avg-modal-score">23564</div>
@@ -230,7 +249,7 @@
                       class="team-logo"
                       alt="Team Kappa Logo"
                     />
-                    <span id="team-name">Team --</span>
+                    <span id="team-name" class="capitalize">Team --</span>
                   </div>
 
                   <span id="avg-score">--</span>
@@ -416,19 +435,39 @@
                 <span>${formatNumber(entry.score)}</span>
               </div>
             `
-              : entry.isALive
+              : entry.is_alive
               ? `
             <div class="board-entry-team">
                 <span>${index + 1}</span>
                 <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
-                      <img src="${
-                        entry.pfp
-                      }" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
-                      <a href="https://warpcast.com/${
-                        entry.username
-                      }" target="_blank" class="board-username ">${
-                  entry.username
-                }</a>
+                  ${
+                    entry.pfp_url
+                      ? `
+                <img src="${entry.pfp_url}" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+                `
+                      : `
+                <div class='w-[20px] h-[20px] rounded-full text-white max-w-[20px] max-h-[20px] bg-[#018A08] text-white font-bold text-[12px] flex items-center justify-center' >  
+                P
+                  </div>
+                `
+                  }   
+                   ${
+                     entry.fname
+                       ? `<a
+                         href="https://warpcast.com/${entry.fname}"
+                         target="_blank"
+                         class="board-username "
+                       >
+                         ${entry.username}
+                       </a>`
+                       : `
+                       <span
+                         class="board-username "
+                       >
+                         Player ${index + 1}
+                       </span>
+                       `
+                   }
                 </div>
                 <span>${formatNumber(entry.score)}</span>
               </div>
@@ -438,10 +477,17 @@
               <span>${index + 1}</span>
               <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
                     <img src="${
-                      entry.pfp
+                      entry.pfp_url
                     }" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
-                    <strike class="board-username ">${entry.username}</strike>
-              </div>
+              ${
+                entry.username
+                  ? `<strike class="board-username ">${entry.username}</strike>`
+                  : `
+                      <span class="board-username" >
+                         Player ${index + 1}
+                       </span>`
+              }
+                    </div>
               <span>💀💀</span>
             </div>
           `
@@ -465,6 +511,7 @@
       document.addEventListener("DOMContentLoaded", async function () {
         const leaderboard = await fetchLeaderBoard();
         updateLeaderboard(leaderboard);
+        await findCurrentTeamAndAvgScore();
         const fc_user = await fetchFCUser([selectedAccount]);
         if (fc_user[selectedAccount][0]) {
           fcUserDetails = fc_user[selectedAccount][0];
@@ -545,38 +592,15 @@
               updateLeaderboard(leaderboard);
             } else {
               // team leaderboard fetch and update
-
-              // const teamMembers = [
-              //   {
-              //     pfp: "https://wrpcd.net/cdn-cgi/imagedelivery/BXluQx4ige9GuW0Ia56BHw/3765900c-48ad-4580-932d-bed17d58ae00/anim=false,fit=contain,f=auto,w=288",
-              //     username: "saxensaheb.eth",
-              //     score: 750,
-              //     isALive: true,
-              //   },
-              //   {
-              //     pfp: "https://wrpcd.net/cdn-cgi/imagedelivery/BXluQx4ige9GuW0Ia56BHw/6a5118e3-d44b-4e1c-b223-833c4dbcaa00/anim=false,fit=contain,f=auto,w=288",
-              //     username: "pratzyy.eth",
-              //     score: 950,
-              //     isALive: false,
-              //   },
-              //   {
-              //     pfp: "https://wrpcd.net/cdn-cgi/imagedelivery/BXluQx4ige9GuW0Ia56BHw/6f618f59-2290-4350-100a-4b5d10abef00/anim=false,fit=contain,f=auto,w=288",
-              //     username: "akhil-bvs",
-              //     score: 2350,
-              //     isALive: true,
-              //   },
-              // ];
-
               const teamLeaderboard = await fetchTeamLeaderboard();
-              console.log(teamLeaderboard);
 
-              updateLeaderboard(teamMembers);
+              updateLeaderboard(teamLeaderboard.teamData);
             }
           });
         });
 
         if (tokenId) {
-          // findCurrentTeamAndAvgScore(tokenId);
+          findCurrentTeamAndAvgScore();
         }
       });
     </script>
@@ -673,13 +697,16 @@
               };
 
               // find team data here
-              const modalShowData = {};
+              const teamData = findCurrentTeamAndAvgScore();
+              const team = teamData.team;
+              const avg_score = teamData.averageScore;
+
               const modalTeamName = document.getElementById("team-modal-name");
               const modalScore = document.getElementById("avg-modal-score");
 
               if (modalTeamName && modalScore) {
-                modalTeamName.innerHTML = modalShowData.teamName;
-                modalScore.innerHTML = score + modalShowData.avgScore;
+                modalTeamName.innerHTML = team.clan;
+                modalScore.innerHTML = score + avg_score;
               }
             }
           }
@@ -900,7 +927,7 @@
           }
 
           if (isNFTPresent) {
-            // await findCurrentTeamAndAvgScore(tokenId);
+            await findCurrentTeamAndAvgScore();
           }
         }
       }
@@ -1058,7 +1085,7 @@
             const teamTab = document.getElementById("team-tab");
             teamTab.style.display = "block";
             if (tokenId) {
-              // findCurrentTeamAndAvgScore(tokenId);
+              findCurrentTeamAndAvgScore();
             }
             const leaderboardTeamBody =
               document.getElementById("leaderboard-body");
@@ -1299,6 +1326,37 @@
           }
         }
       }
+
+      async function Pfps() {
+        const teamData = await fetchTeamLeaderboard();
+        const teamMembers = teamData.teamData;
+        const pfps = teamMembers.filter((member) => member.pfp_url) ?? [];
+        const slicedPfps = pfps.slice(0, 3) ?? [];
+        const remainingLength = pfps.length - 3 ?? 0;
+
+        return {
+          pfps: slicedPfps,
+          remainingLength,
+        };
+      }
+      async function findCurrentTeamAndAvgScore() {
+        const teamData = await fetchTeamLeaderboard();
+        console.log(teamData);
+        const team = teamData.team;
+        const teamMembers = teamData.teamData;
+        const avg_score = teamData.averageScore;
+        console.log(teamData);
+        document.getElementById("top-score").innerHTML = teamData.yourScore ?? 0;
+        document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
+        document.getElementById("avg-score").innerHTML = avg_score.toFixed(2);
+        const modalTeamName = document.getElementById("team-modal-name");
+        const modalScore = document.getElementById("avg-modal-score");
+        if (modalScore && modalTeamName) {
+          modalTeamName.innerHTML = `Team ${team.clan}`;
+          modalScore.innerHTML = avg_score.toFixed(2);
+        }
+      }
+
       // window.addEventListener("load", async () => {
       //   await init();
       // });

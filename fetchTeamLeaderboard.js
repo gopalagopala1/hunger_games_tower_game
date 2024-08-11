@@ -15,7 +15,7 @@ const fetchTeamLeaderboard = async () => {
   try {
     console.log("token ID", tokenId);
     const gameId = "2329dcdc-a26c-4abd-b7ad-8c3a36b9c502";
-    const url = `http://localhost:3000/api/getTeamData?gameId=${gameId}&tokenId=${tokenId}`;
+    const url = `https://tower-game-backend.vercel.app/api/getTeamData?gameId=${gameId}&tokenId=${tokenId}`;
     const options = {
       method: "GET",
       headers: {
@@ -31,7 +31,7 @@ const fetchTeamLeaderboard = async () => {
     playBtn.disabled = false;
     playBtn.style.cursor = "pointer";
     playBtn.style.opacity = "1";
-    console.log("team data", data);
+console.log(data);
 
     return data;
   } catch (err) {

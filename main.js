@@ -173,12 +173,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     teamTab.style.display = "none";
   }
 
-  //   if (window.location.href.includes("playagain")) {
-  //     setTimeout(() => {
-  //       indexHide();
-  //       startGame();
-  //       const actionImg = document.getElementsByClassName("landing")[0];
-  //       actionImg.style.display = "none";
-  //     }, 200);
-  //   }
+  if (window.location.href.includes("playagain")) {
+    setTimeout(() => {
+      indexHide();
+      startGame();
+      const actionImg = document.getElementsByClassName("landing")[0];
+      actionImg.style.display = "none";
+    }, 200);
+  }
 });
