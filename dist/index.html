@@ -8,8 +8,8 @@
     />
     <title>Tower Building</title>
     <link rel="icon" type="image/x-icon" href="./assets/favicon.png" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="endGameModal.css" />
+    <link rel="stylesheet" href="./dist/custom/styles.css" />
+    <link rel="stylesheet" href="./dist/custom/endGameModal.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
@@ -35,55 +35,37 @@
             </div>
             <div class="team-summary">
               <div class="team-details-table">
-                <img
+                <!-- <img
                   loading="lazy"
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/a03ce52e33897c0985770c7c2dd604c63df5a421bcef88ae906f02ca32a8df10?apiKey=0e14ce67bb76481cb40ff58c7f753be2&&apiKey=0e14ce67bb76481cb40ff58c7f753be2"
                   class="team-logo"
                   alt="Team Kappa Logo"
-                />
-                <span class="team-name">Team Kappa</span>
+                /> -->
+                <div
+                  class="flex items-center justify-start"
+                  id="team-members-pfps-modal"
+                ></div>
+                <span id="team-modal-name">Team --</span>
               </div>
-              <div class="data-score">23564</div>
+              <div id="avg-modal-score" class="capitalize">0</div>
             </div>
           </article>
 
           <article class="global-leaderboard-container">
             <div class="global-leaderboard-title">Global Leaderboard</div>
             <div class="global-leaderboard-separator"></div>
-            <div class="global-leaderboard-rows">
-              <div class="global-leaderboard-header-row">
-                <div class="header-row">
-                  <div class="data-rank">#</div>
-                  <div class="data-team-name">Team name</div>
-                </div>
-                <div class="global-data-team-average">Avg. Score</div>
-              </div>
-              <div class="global-leaderboard-body">
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">01</div>
-                    <div class="global-team-name">Alpha</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">02</div>
-                    <div class="global-team-name">Beta</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-
-                <div class="global-leaderboard-row">
-                  <div class="team-data-cell">
-                    <div class="data-rank">03</div>
-                    <div class="global-team-name">Gamma</div>
-                  </div>
-                  <div class="global-team-average">23564</div>
-                </div>
-              </div>
+            <div
+              id="leaderboard-body-header"
+              class="board-table-header modal-header-flex !pt-[16px] !pb-[12px] font-Geist-Regular font-12"
+            >
+              <span>#</span>
+              <span>Team</span>
+              <span>Score</span>
             </div>
+            <div
+              id="leaderboard-modal-body"
+              class="font-Geist-Regular font-12 leaderboard-team-body"
+            ></div>
           </article>
           <button class="play-again-button" id="playAgainBtn" tabindex="0">
             Play Again
@@ -118,7 +100,7 @@
           >
         </div>
         <div class="flex flex-col w-full gap-[8px] items-center justify-start">
-          <button id="nftModalButton" class="modal-button">
+          <button id="connect-again" class="modal-button">
             Connect different wallet
           </button>
           <a
@@ -128,6 +110,27 @@
             >0r, Buy on Opensea -></a
           >
         </div>
+      </div>
+    </div>
+
+    <!-- DEAD PLAYER MODAL -->
+    <div id="deadmodalcontainer" class="not-found-modal-container">
+      <div id="deadmodal" class="not-found-modal mobile-width !gap-[32px]">
+        <div class="flex flex-col w-full gap-[8px] items-center justify-start">
+          <p
+            id="nftModalHeader"
+            class="font-Kangmas text-[42px] modal-header !text-start"
+          >
+            Fallen, but not forgotten. A flicker of hope remains, warrior.
+          </p>
+          <span id="nftmodalSubHeader" class="noNft-subheader !text-start"
+            >No NFT found in your connected wallet. Try connecting a different
+            wallet or buy on opensea</span
+          >
+        </div>
+        <button id="connect-again-dead" class="modal-button">
+          Connect different wallet
+        </button>
       </div>
     </div>
 
@@ -154,76 +157,91 @@
           </div>
 
           <div class="side-panel-details">
-            <div class="top-level-info">
-              <div>
-                <span class="font-Geist-Medium font-13 sub-top-level-info"
-                  >Ends in</span
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div class="top-level-info w-full">
+                <div>
+                  <span class="font-Geist-Medium font-13 sub-top-level-info"
+                    >Ends in</span
+                  >
+
+                  <br />
+                  <span class="font-Geist-Medium font-18" id="ends-in"
+                    >24h 39m 34s</span
+                  >
+                </div>
+              </div>
+
+              <div id="leaderboard-id" class="leaderboard b-height w-full">
+                <div class="board-header">
+                  <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active font-Geist-Medium"
+                        id="global-tab"
+                        data-toggle="tab"
+                        href="#global"
+                        role="tab"
+                        aria-controls="global"
+                        aria-selected="true"
+                        >Global Leaderboard</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link font-Geist-Medium"
+                        id="team-tab"
+                        data-toggle="tab"
+                        href="#team"
+                        role="tab"
+                        aria-controls="team"
+                        aria-selected="false"
+                        >Team Leaderboard</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  id="leaderboard-body-header"
+                  class="board-table-header font-Geist-Regular font-12"
                 >
-
-                <br />
-                <span class="font-Geist-Medium font-18" id="ends-in"
-                  >24h 39m 34s</span
-                >
+                  <span>#</span>
+                  <span>Team</span>
+                  <span>Score</span>
+                </div>
+                <div class="board-header-bottom"></div>
+                <div
+                  id="leaderboard-body"
+                  class="font-Geist-Regular font-12 leaderboard-team-body"
+                ></div>
               </div>
             </div>
 
-            <div id="leaderboard-id" class="leaderboard b-height">
-              <div class="board-header">
-                <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active font-Geist-Medium"
-                      id="global-tab"
-                      data-toggle="tab"
-                      href="#global"
-                      role="tab"
-                      aria-controls="global"
-                      aria-selected="true"
-                      >Global Leaderboard</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link font-Geist-Medium"
-                      id="team-tab"
-                      data-toggle="tab"
-                      href="#team"
-                      role="tab"
-                      aria-controls="team"
-                      aria-selected="false"
-                      >Team Leaderboard</a
-                    >
-                  </li>
-                </ul>
+            <div
+              class="flex flex-col w-full gap-[8px] items-center justify-start"
+            >
+              <div id="leaderboard-team-id" class="leaderboard-team w-full">
+                <div class="leaderboard-team-header">
+                  <span>Team Name</span>
+                  <span>Avg Score</span>
+                </div>
+                <div class="leaderboard-team-body">
+                  <div class="team-details-table">
+                    <div
+                      class="flex items-center justify-start"
+                      id="team-members-pfps"
+                    ></div>
+                    <span id="team-name" class="capitalize">Team --</span>
+                  </div>
+
+                  <span id="avg-score">--</span>
+                  <!-- <span id="team-name">Team --</span> -->
+                </div>
               </div>
-              <div
-                id="leaderboard-body-header"
-                class="board-table-header font-Geist-Regular font-12"
-              >
-                <span>#</span>
-                <span>Team</span>
-                <span>Score</span>
-              </div>
-              <div class="board-header-bottom"></div>
-              <div
-                id="leaderboard-body"
-                class="font-Geist-Regular font-12"
-              ></div>
+
+              <button id="start-game">Play</button>
             </div>
-
-            <div id="leaderboard-team-id" class="leaderboard-team">
-              <div class="leaderboard-team-header">
-                <span>Team Name</span>
-                <span>Avg Score</span>
-              </div>
-
-              <div class="leaderboard-team-body">
-                <span id="team-name">Team --</span>
-                <span id="avg-score">--</span>
-              </div>
-            </div>
-
-            <button id="start-game">Play</button>
           </div>
         </div>
       </div>
@@ -276,18 +294,31 @@
           </button>
         </div>
       </div>
+
+      <!-- toast -->
+      <div
+        id="toast-success"
+        class="flex items-center z-[1000] text-center justify-center transition-all duration-300 w-[200px] p-[16px] text-[#018a08] bg-white rounded-lg text-[14px] font-bold shadow hidden absolute -top-[3000px] left-1/2 -translate-x-1/2"
+        role="alert"
+      >
+        <div class="ms-[12px] text-[14px] font-bold toast-text">
+          ✅ Loading...
+        </div>
+      </div>
     </div>
     <!-- contract abi -->
-    <script src="contractABI.js"></script>
+    <script src="./dist/custom/contractABI.js"></script>
     <!-- fetching user fc details -->
-    <script src="fetchFCUser.js"></script>
-    <script src="checkNFT.js"></script>
-    <script src="fetchLeaderboard.js"></script>
+    <script src="./dist/custom/fetchFCUser.js"></script>
+    <script src="./dist/custom/checkNFT.js"></script>
+    <script src="./dist/custom/fetchTeamLeaderboard.js"></script>
+    <script src="./dist/custom/fetchLeaderboard.js"></script>
     <script src="./dist/bundle.js"></script>
     <script src="./assets/zepto-1.1.6.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <!-- Web3Modal CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.0/dist/index.min.js"></script> -->
     <!-- WalletConnect CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
     <!-- Ethers.js CDN -->
@@ -359,86 +390,6 @@
       function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
       }
-      //supabase related queries
-      // async function fetchLeaderBoard() {
-      //   try {
-      //     let { data, error } = await supabase
-      //       .from("points")
-      //       .select("*")
-      //       .eq("game_id", gameId)
-      //       .order("points", { ascending: false });
-
-      //     console.log("data", data);
-
-      //     let teamTokenIds = await supabase
-      //       .from("teamparticipants")
-      //       .select("*");
-      //     console.log("data id", teamTokenIds);
-
-      //     let groupedByTeamId = teamTokenIds?.data.reduce(
-      //       (acc, participant) => {
-      //         const { team_id } = participant;
-      //         if (!acc[team_id]) {
-      //           acc[team_id] = [];
-      //         }
-      //         acc[team_id].push(participant);
-      //         return acc;
-      //       },
-      //       {}
-      //     );
-
-      //     let teamAverageScores = Object.entries(groupedByTeamId).map(
-      //       ([teamId, participants]) => {
-      //         let totalPoints = participants.reduce((acc, participant) => {
-      //           const points = data.find(
-      //             (d) => d.tokenid === participant.tokenid
-      //           )?.points;
-
-      //           const number = parseInt(points ?? "0");
-
-      //           acc = acc + number;
-      //           console.log("acc: ", acc);
-      //           return acc;
-      //         }, 0);
-      //         let averageScore = totalPoints / participants.length;
-      //         return { teamId, averageScore };
-      //       }
-      //     );
-
-      //     if (activeTab === "#global-tab") {
-      //       data = teamAverageScores
-      //         ?.sort((a, b) => b.averageScore - a.averageScore)
-      //         ?.map((v) => {
-      //           return {
-      //             tokenid: `Team ${capitalizeFirstLetter(
-      //               teamParticipants[v.teamId]
-      //             )}`,
-      //             points: v.averageScore,
-      //           };
-      //         });
-      //     }
-
-      //     if (activeTab === "#team-tab") {
-      //       teamData?.sort((a, b) => b.points - a.points);
-
-      //       data = teamData;
-      //     }
-
-      //     if (error) throw error;
-      //     updateLeaderboard(data);
-      //     noOfParticipants = data?.length ?? 1;
-
-      //     document.getElementById(
-      //       "part-count"
-      //     ).innerHTML = `${noOfParticipants}/200`;
-
-      //     if (tokenId) {
-      //       findCurrentTeamAndAvgScore(tokenId);
-      //     }
-      //   } catch (error) {
-      //     console.error("Error fetching leaderboard data:", error);
-      //   }
-      // }
 
       function updateLeaderboard(data) {
         if (activeTab === "#team-tab") {
@@ -453,26 +404,97 @@
         }
 
         const leaderboardBody = document.querySelector("#leaderboard-body");
+        const leaderboardModalBody = document.querySelector(
+          "#leaderboard-modal-body"
+        );
+
         const leaderboardEntries = data
-          .map(
-            (entry, index) => `
+          .map((entry, index) =>
+            activeTab !== "#team-tab"
+              ? `
               <div class="board-entry">
                 <span>${index + 1}</span>
-                <span class="text-start">${entry.tokenid}</span>
-                <span>${formatNumber(entry.points)}</span>
+                <span class="text-start capitalize">${entry.team}</span>
+                <span>${formatNumber(entry.score)}</span>
               </div>
             `
+              : entry.is_alive
+              ? `
+            <div class="board-entry-team">
+                <span>${index + 1}</span>
+                <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                  ${
+                    entry.pfp_url
+                      ? `
+                <img src="${entry.pfp_url}" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+                `
+                      : `
+                <div class='w-[20px] h-[20px] rounded-full !text-white max-w-[20px] max-h-[20px] bg-[#018A08] !font-bold text-[12px] flex items-center justify-center' >  
+                P
+                  </div>
+                `
+                  }   
+                   ${
+                     entry.fname
+                       ? `<a
+                         href="https://warpcast.com/${entry.fname}"
+                         target="_blank"
+                         class="board-username "
+                       >
+                         ${entry.username}
+                       </a>`
+                       : `
+                       <span
+                         class="board-username "
+                       >
+                         Player ${index + 1}
+                       </span>
+                       `
+                   }
+                </div>
+                <span>${formatNumber(entry.score)}</span>
+              </div>
+            `
+              : `
+          <div class="board-entry-team">
+              <span>${index + 1}</span>
+              <div class="flex gap-[8px] py-[10px] px-[20px] items-center justify-start">
+                    <img src="${
+                      entry.pfp_url
+                    }" width="24" height="24" class="w-[24px] h-[24px] rounded-full max-w-[24px] max-h-[24px] object-cover" alt="">
+              ${
+                entry.username
+                  ? `<strike class="board-username ">${entry.username}</strike>`
+                  : `
+                      <span class="board-username" >
+                         Player ${index + 1}
+                       </span>`
+              }
+                    </div>
+              <span>💀💀</span>
+            </div>
+          `
           )
           .join("");
+
         leaderboardBody.innerHTML = `
 
               ${leaderboardEntries}
             `;
+        leaderboardModalBody.innerHTML = `
+
+              ${leaderboardEntries}
+            `;
+        const playBtn = document.getElementById("start-game");
+        playBtn.disabled = false;
+        playBtn.style.cursor = "pointer";
+        playBtn.style.opacity = "1";
       }
 
       document.addEventListener("DOMContentLoaded", async function () {
         const leaderboard = await fetchLeaderBoard();
-        console.log("leaderboard data: ", leaderboard);
+        updateLeaderboard(leaderboard);
+        await findCurrentTeamAndAvgScore();
         const fc_user = await fetchFCUser([selectedAccount]);
         if (fc_user[selectedAccount][0]) {
           fcUserDetails = fc_user[selectedAccount][0];
@@ -527,155 +549,6 @@
         }
       };
 
-      const insertData = async (tokenId, gameId) => {
-        try {
-          const response = await supabase
-            .from("points")
-            .select("*")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (!response.data) {
-            const { data, error } = await supabase
-              .from("points")
-              .insert([{ tokenid: tokenId, points: 0, game_id: gameId }])
-              .single();
-          }
-        } catch (error) {
-          console.error("Error inserting token ID:", error);
-        }
-      };
-
-      const findTeamByTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("team_id")
-            .eq("tokenid", tokenId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team found for tokenId ${tokenId}`);
-            return null;
-          }
-
-          const teamId = data.team_id;
-          const { data: teamData, error: teamError } = await supabase
-            .from("teams")
-            .select("*")
-            .eq("id", teamId)
-            .single();
-
-          if (teamError) throw teamError;
-
-          if (!teamData) {
-            console.error(`No team data found for teamId ${teamId}`);
-            return null;
-          }
-
-          return teamData;
-        } catch (error) {
-          console.error("Error finding team by tokenId:", error);
-          return null;
-        }
-      };
-
-      const getTokenIdsInTeam = async (teamId) => {
-        try {
-          const { data, error } = await supabase
-            .from("teamparticipants")
-            .select("tokenid")
-            .eq("team_id", teamId);
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(`No team participants found for teamId ${teamId}`);
-            return [];
-          }
-
-          return data.map((participant) => participant.tokenid);
-        } catch (error) {
-          console.error("Error getting token IDs in team:", error);
-          return [];
-        }
-      };
-
-      const getScoreForTokenId = async (tokenId) => {
-        try {
-          const { data, error } = await supabase
-            .from("points")
-            .select("points")
-            .eq("tokenid", tokenId)
-            .eq("game_id", gameId)
-            .single();
-
-          if (error) throw error;
-
-          if (!data) {
-            console.error(
-              `No score found for tokenId ${tokenId} and gameId ${gameId}`
-            );
-            return 0;
-          }
-
-          return data.points;
-        } catch (error) {
-          console.error("Error getting score for tokenId:", error);
-          return 0;
-        }
-      };
-
-      function addUniqueEntry(teamData, newEntry) {
-        const map = new Map(teamData.map((item) => [item.tokenid, item]));
-        map.set(newEntry.tokenid, newEntry);
-        return Array.from(map.values());
-      }
-
-      const findCurrentTeamAndAvgScore = async (tokenId) => {
-        try {
-          // Assuming there's a function to find the current team of a tokenId
-          const team = await findTeamByTokenId(tokenId);
-          // Assuming there's a function to get all token ids in a team
-          const teamTokenIds = await getTokenIdsInTeam(team.id);
-
-          // Assuming there's a function to get the score for a tokenId
-          let totalScore = 0;
-          for (const id of teamTokenIds) {
-            const score = await getScoreForTokenId(id);
-            totalScore += score;
-
-            teamData = addUniqueEntry(teamData, { tokenid: id, points: score });
-
-            if (id === tokenId) {
-              document.getElementById("top-score").innerHTML =
-                formatNumber(score);
-            }
-          }
-          const avgScore = totalScore / teamTokenIds.length;
-
-          const leaderboardTeam = document.getElementById(
-            "leaderboard-team-id"
-          );
-          leaderboardTeam.classList.remove("hide");
-
-          const leaderboard = document.getElementById("leaderboard-id");
-          leaderboard.classList.remove("b-height");
-          leaderboard.classList.add("a-height");
-          document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
-
-          document.getElementById("avg-score").innerHTML = avgScore.toFixed(2);
-        } catch (error) {
-          console.error(
-            "Error finding team or calculating average score:",
-            error
-          );
-        }
-      };
-
       document.addEventListener("DOMContentLoaded", function () {
         const tabs = document.querySelectorAll(".nav-link");
 
@@ -685,7 +558,7 @@
         }
 
         tabs.forEach((tab) => {
-          tab.addEventListener("click", function (event) {
+          tab.addEventListener("click", async function (event) {
             event.preventDefault();
 
             // Remove 'active' class from all tabs and 'show active' from all tab contents
@@ -697,9 +570,21 @@
             // Get the target tab content and add 'show active' class
             const targetId = tab.getAttribute("href");
             activeTab = `${targetId}-tab`;
-            fetchLeaderBoard();
+            if (tab.href.includes("global")) {
+              const leaderboard = await fetchLeaderBoard();
+              updateLeaderboard(leaderboard);
+            } else {
+              // team leaderboard fetch and update
+              const teamLeaderboard = await fetchTeamLeaderboard();
+
+              updateLeaderboard(teamLeaderboard.teamData);
+            }
           });
         });
+
+        if (tokenId) {
+          findCurrentTeamAndAvgScore();
+        }
       });
     </script>
     <script>
@@ -778,7 +663,7 @@
         setGameSuccess: function (s) {
           successCount = s;
         },
-        setGameFailed: function (f) {
+        setGameFailed: async function (f) {
           $("#score").text(score);
 
           if (f >= 3) {
@@ -788,10 +673,38 @@
               gameEnded.style.display = "flex";
               const scoreModal = document.getElementById("modal-score");
               scoreModal.innerText = score;
+
               const playAgainBtn = document.getElementById("playAgainBtn");
               playAgainBtn.onclick = () => {
                 overShowOver();
               };
+              const leaderboard = await fetchLeaderBoard();
+              await updateLeaderboard(leaderboard);
+              // find team data here
+              const teamData = await fetchTeamLeaderboard();
+              const team = teamData.team;
+              const avg_score = teamData.averageScore;
+              const modalTeamName = document.getElementById("team-modal-name");
+              const modalScore = document.getElementById("avg-modal-score");
+              modalTeamName.innerHTML = `Team ${team.clan} `;
+              modalScore.innerHTML = avg_score;
+              const pfpsContainer = document.getElementById(
+                "team-members-pfps-modal"
+              );
+              const pfpsData = await Pfps();
+              const pfpImages = pfpsData.pfps;
+              const remainingLength = pfpsData.remainingLength;
+
+              pfpsContainer.innerHTML = `
+              ${pfpImages.map((pfp) => {
+                return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+              })}
+                <div
+                class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                >
+                +${remainingLength}
+                </div>
+                `;
             }
           }
         },
@@ -1011,7 +924,7 @@
           }
 
           if (isNFTPresent) {
-            await findCurrentTeamAndAvgScore(tokenId);
+            await findCurrentTeamAndAvgScore();
           }
         }
       }
@@ -1092,8 +1005,8 @@
           const textContainer =
             document.getElementsByClassName("side-panel-header");
           const playButtonElement = document.getElementById("start-game");
-
-          if (textContainer && playButtonElement) {
+          const score = document.getElementById("top-score");
+          if (textContainer && playButtonElement && score.innerText === "0") {
             textContainer[0].innerHTML = `
               Your score is
               <span id="top-score" class="font-Kangmas font-bold">0</span>! Can be
@@ -1103,6 +1016,7 @@
           }
         }
       }
+      console.log("tokenID", tokenId);
 
       function toggleWalletSelectionModal(show) {
         const modal = document.getElementById("walletSelectionModal");
@@ -1155,16 +1069,25 @@
               fcUserDetails = fc_user[selectedAccount][0];
               console.log("fc obj", fcUserDetails);
               const pfpImage = document.getElementById("pfpImage");
-              const logOut = document.getElementsByClassName("log-out")[0];
               pfpImage.style.display = "block";
               pfpImage.style.width = "24px";
               pfpImage.style.height = "24px";
               pfpImage.src = fcUserDetails.pfp_url;
-              if (logOut) {
-                logOut.style.display = "block";
-                logOut.addEventListener("click", disconnectWallet);
-              }
             }
+            const logOut = document.getElementsByClassName("log-out")[0];
+            if (logOut) {
+              logOut.style.display = "block";
+              logOut.addEventListener("click", disconnectWallet);
+            }
+            const teamTab = document.getElementById("team-tab");
+            teamTab.style.display = "block";
+            if (tokenId) {
+              findCurrentTeamAndAvgScore();
+            }
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
           }
         } catch (e) {
           console.log("Could not connect to the selected wallet", e);
@@ -1202,16 +1125,26 @@
             fcUserDetails = fc_user[selectedAccount][0];
             console.log("fc obj", fcUserDetails);
             const pfpImage = document.getElementById("pfpImage");
-            const logOut = document.getElementsByClassName("log-out")[0];
             pfpImage.style.display = "block";
             pfpImage.style.width = "24px";
             pfpImage.style.height = "24px";
             pfpImage.src = fcUserDetails.pfp_url;
-            if (logOut) {
-              logOut.style.display = "block";
-              logOut.addEventListener("click", disconnectWallet);
-            }
           }
+          const logOut = document.getElementsByClassName("log-out")[0];
+          if (logOut) {
+            logOut.style.display = "block";
+            logOut.addEventListener("click", disconnectWallet);
+          }
+          const teamTab = document.getElementById("team-tab");
+          teamTab.style.display = "block";
+          const leaderboardTeam = document.getElementById(
+            "leaderboard-team-id"
+          );
+          leaderboardTeam.classList.remove("hide");
+          const leaderboardTeamBody =
+            document.getElementById("leaderboard-body");
+          leaderboardTeamBody.style.height = "calc(100vh - 630px)";
+          leaderboardTeamBody.style.maxHeight = "calc(100vh - 630px)";
           const textContainer =
             document.getElementsByClassName("side-panel-header");
           const playButtonElement = document.getElementById("start-game");
@@ -1257,6 +1190,14 @@
               playButtonElement.textContent = "Connect Wallet to play";
             }
             resetButton();
+            const leaderboardTeam = document.getElementById(
+              "leaderboard-team-id"
+            );
+            const leaderboardTeamBody =
+              document.getElementById("leaderboard-body");
+            leaderboardTeam.classList.add("hide");
+            leaderboardTeamBody.style.height = "calc(100vh - 550px)";
+            leaderboardTeamBody.style.maxHeight = "calc(100vh - 550px)";
           });
           const response = await checkNFT(selectedAccount);
           console.log("isNFT", response);
@@ -1275,6 +1216,7 @@
 
           if (isNFTPresent) {
             const leaderboard = await fetchLeaderBoard();
+            updateLeaderboard(leaderboard);
             console.log("leaderboard data: ", leaderboard);
           }
         } catch (e) {
@@ -1369,6 +1311,7 @@
         }
 
         console.log("Wallet disconnected successfully");
+        overShowOver();
       }
 
       async function changeWallet() {
@@ -1380,16 +1323,62 @@
           }
         }
       }
-      window.addEventListener("load", async () => {
-        await init();
-      });
-      window.addEventListener("DOMContentLoaded", async () => {
-        console.log("loading...");
 
+      async function Pfps() {
+        const teamData = await fetchTeamLeaderboard();
+        const teamMembers = teamData.teamData;
+        const pfps = teamMembers.filter((member) => member.pfp_url) ?? [];
+        const slicedPfps = pfps.slice(0, 3) ?? [];
+        const remainingLength = pfps.length - 3 ?? 0;
+
+        return {
+          pfps: slicedPfps,
+          remainingLength,
+        };
+      }
+      async function findCurrentTeamAndAvgScore() {
+        const teamData = await fetchTeamLeaderboard();
+        console.log(teamData);
+        const team = teamData.team;
+        const teamMembers = teamData.teamData;
+        const avg_score = teamData.averageScore;
+        console.log(teamData);
+        document.getElementById("top-score").innerHTML =
+          teamData.yourScore ?? 0;
+        document.getElementById("team-name").innerHTML = `Team ${team.clan}`;
+        document.getElementById("avg-score").innerHTML = avg_score.toFixed(2);
+        const modalTeamName = document.getElementById("team-modal-name");
+        const modalScore = document.getElementById("avg-modal-score");
+        if (modalScore && modalTeamName) {
+          modalTeamName.innerHTML = `Team ${team.clan}`;
+          modalScore.innerHTML = avg_score.toFixed(2);
+        }
+        const pfpsContainer = document.getElementById("team-members-pfps");
+        const pfpsData = await Pfps();
+        const pfpImages = pfpsData.pfps;
+        console.log(pfpImages);
+        const remainingLength = pfpsData.remainingLength;
+
+        pfpsContainer.innerHTML = `
+        ${pfpImages.map((pfp) => {
+          return `<img class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-medium text-[12px] flex items-center justify-center object-cover " src="${pfp.pfp_url}"  />`;
+        })}
+                      <div
+                        class="w-[24px] h-[24px] rounded-full max-w-[24px] border-[2px] border-[#E5F3E6] max-h-[24px] bg-[#018A08] mx-[-5px] text-white font-bold text-[10px] flex items-center justify-center"
+                      >
+                        +${remainingLength}
+                      </div>
+        `;
+      }
+
+      // window.addEventListener("load", async () => {
+      //   await init();
+      // });
+      window.addEventListener("DOMContentLoaded", async () => {
         await init();
       });
     </script>
     <!-- main dom load script adding onclick events -->
-    <script src="main.js"></script>
+    <script src="./dist/custom/main.js"></script>
   </body>
 </html>

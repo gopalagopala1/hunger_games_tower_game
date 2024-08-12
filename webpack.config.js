@@ -40,6 +40,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
+        { from: "custom", to: "custom" },
         { from: "assets", to: "assets" },
         { from: "index.html", to: "" },
       ],
